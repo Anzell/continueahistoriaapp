@@ -16,8 +16,6 @@ class SignUpUseCase implements FutureUseCase<None, SignUpUseCaseParams>{
 
 }
 
-
-
 class SignUpUseCaseParams extends Equatable {
   final String email;
   final String password;

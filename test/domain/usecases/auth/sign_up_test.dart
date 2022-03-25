@@ -9,7 +9,7 @@ import 'package:mockito/mockito.dart';
 import 'sign_up_test.mocks.dart';
 
 @GenerateMocks([AuthRepository])
-void main () {
+void main() {
   late MockAuthRepository mockAuthRepository;
   late SignUpUseCase usecase;
 
@@ -20,15 +20,19 @@ void main () {
     usecase = SignUpUseCase(repository: mockAuthRepository);
   });
 
-  group("sign up use case", ()  {
+  group("sign up use case", () {
     test("should return right if call to repository is success", () async {
-      when(mockAuthRepository.signUp(password: anyNamed('password'), email: anyNamed("email"), username: anyNamed("username"))).thenAnswer((_) async => const Right(None()));
+      when(mockAuthRepository.signUp(
+              password: anyNamed('password'), email: anyNamed("email"), username: anyNamed("username")))
+          .thenAnswer((_) async => const Right(None()));
       final result = await usecase(testParams);
       expect(result, equals(const Right(None())));
     });
 
-    test("should return right if call to repository is success", () async {
-      when(mockAuthRepository.signUp(password: anyNamed('password'), email: anyNamed("email"), username: anyNamed("username"))).thenAnswer((_) async => Left(ServerFailure()));
+    test("should return left if call to repository is fail", () async {
+      when(mockAuthRepository.signUp(
+              password: anyNamed('password'), email: anyNamed("email"), username: anyNamed("username")))
+          .thenAnswer((_) async => Left(ServerFailure()));
       final result = await usecase(testParams);
       expect(result, equals(Left(ServerFailure())));
     });
