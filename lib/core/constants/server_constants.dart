@@ -1,6 +1,8 @@
 class ServerConstants{
   static const url = "http://localhost:3000";
   static const signUpPath = "/api/register/user";
+  static const loginPath = "/api/login/user";
+  static const getUserByIdPath = "/api/user/";
 }
 
 class ServerCodes {
@@ -11,4 +13,5 @@ class ServerCodes {
   static const success = "success";
   static const invalidCredentials = "invalid_credentials";
   static const validationError = "validation_error";
+  static const acessDenied = "acess_denied";
 }

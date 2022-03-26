@@ -11,9 +11,15 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.datasource});
 
   @override
-  Future<Either<Failure, UserEntity>> signIn({required String email, required String password}) {
-    // TODO: implement signIn
-    throw UnimplementedError();
+  Future<Either<Failure, UserEntity>> signIn({required String email, required String password}) async {
+    try{
+      final response = await datasource.signIn(email: email, password: password);
+      return Right(response);
+    } on InvalidCredentialsException {
+      return Left(InvalidCredentialsFailure());
+    } catch(e){
+      return Left(ServerFailure());
+    }
   }
 
   @override

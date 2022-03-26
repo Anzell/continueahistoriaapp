@@ -8,6 +8,8 @@ abstract class Failure extends Equatable{
 class ServerFailure extends Failure{}
 class UsernameAlreadyRegisteredFailure extends Failure{}
 class EmailAlreadyRegisteredFailure extends Failure{}
+class InvalidCredentialsFailure extends Failure{}
+class AccessDeniedFailure extends Failure{}
 class ValidationFailure extends Failure{
   final String message;
 

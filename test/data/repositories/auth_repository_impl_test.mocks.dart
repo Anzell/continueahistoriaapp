@@ -2,10 +2,11 @@
 // in continueahistoriaapp/test/data/repositories/auth_repository_impl_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:continueahistoriaapp/data/datasources/remote/auth_remote_ds.dart'
-    as _i2;
+    as _i3;
+import 'package:continueahistoriaapp/domain/entities/user_entity.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -18,27 +19,29 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
+class _FakeUserEntity_0 extends _i1.Fake implements _i2.UserEntity {}
+
 /// A class which mocks [AuthRemoteDatasource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDatasource extends _i1.Mock
-    implements _i2.AuthRemoteDatasource {
+    implements _i3.AuthRemoteDatasource {
   MockAuthRemoteDatasource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> signUp(
+  _i4.Future<void> signUp(
           {String? email, String? password, String? username}) =>
       (super.noSuchMethod(
           Invocation.method(#signUp, [],
               {#email: email, #password: password, #username: username}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
   @override
-  _i3.Future<void> signIn({String? email, String? password}) =>
-      (super.noSuchMethod(
+  _i4.Future<_i2.UserEntity> signIn({String? email, String? password}) => (super
+      .noSuchMethod(
           Invocation.method(#signIn, [], {#email: email, #password: password}),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+          returnValue: Future<_i2.UserEntity>.value(_FakeUserEntity_0())) as _i4
+      .Future<_i2.UserEntity>);
 }
