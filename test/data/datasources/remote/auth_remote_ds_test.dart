@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:continueahistoriaapp/core/constants/hive_constants.dart';
 import 'package:continueahistoriaapp/core/constants/server_constants.dart';
 import 'package:continueahistoriaapp/core/failures/exceptions.dart';
 import 'package:continueahistoriaapp/data/datasources/remote/auth_remote_ds.dart';
