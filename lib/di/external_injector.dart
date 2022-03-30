@@ -10,7 +10,7 @@ class ExternalInjector {
   static Future<void> inject() async {
     final directory = await getApplicationDocumentsDirectory();
     Hive.init(directory.path);
-    await Hive.openLazyBox(HiveStaticBoxes.authorization);
+    //await Hive.openLazyBox(HiveStaticBoxes.authorization);
     getIt.registerFactory<HiveInterface>(() => Hive);
     getIt.registerFactory<http.Client>(() => http.Client());
   }

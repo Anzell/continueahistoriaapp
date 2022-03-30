@@ -23,10 +23,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<UserEntity> signIn({required String email, required String password}) async {
-    final responseLogin = await httpClient.post(Uri.parse(ServerConstants.url + ServerConstants.loginPath), body: {
+    final responseLogin = await httpClient.post(Uri.parse(ServerConstants.url + ServerConstants.loginPath), body: json.encode({
       "email": email,
       "password": password,
-    }, headers: {
+    }), headers: {
       "Content-Type": "application/json"
     });
     if (json.decode(responseLogin.body)["code"] == ServerCodes.success) {
@@ -39,8 +39,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     throw ServerException();
   }
 
-  Future<void> _saveTokenInStorage(String token) async =>
-      await hive.box(HiveStaticBoxes.authorization).put(HiveStaticKeys.token, token);
+  Future<void> _saveTokenInStorage(String token) async{
+    final box = await hive.openBox(HiveStaticBoxes.authorization);
+    await box.put(HiveStaticKeys.token, token);
+    await box.close();
+  }
+
 
   Future<UserEntity> _getUser(String id) async {
     final path = ServerConstants.url + ServerConstants.getUserByIdPath + id;
@@ -54,7 +58,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     throw ServerException();
   }
 
-  Future<String> _getAuthorizationToken() async => hive.box(HiveStaticBoxes.authorization).get(HiveStaticKeys.token);
+  Future<String> _getAuthorizationToken() async {
+    final box = await hive.openBox(HiveStaticBoxes.authorization);
+    final token = box.get(HiveStaticKeys.token);
+    await box.close();
+    return token;
+  }
 
   @override
   Future<void> signUp({required String email, required String password, required String username}) async {

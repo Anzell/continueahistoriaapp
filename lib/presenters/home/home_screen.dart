@@ -65,6 +65,9 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () async {
                                   setState(() => _loading = true);
                                   await _signUp();
+                                  if(authController.failure.isNone()){
+                                    //TODO go to main screen
+                                  }
                                   setState(() => _loading = false);
                                 },
                               ),
@@ -108,6 +111,9 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _signUp() async {
     await authController.signUp(
-        password: passwordController.text, email: emailController.text, username: usernameController.text);
+      password: passwordController.text,
+      email: emailController.text,
+      username: usernameController.text,
+    );
   }
 }
