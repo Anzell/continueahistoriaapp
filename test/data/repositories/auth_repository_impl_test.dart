@@ -76,4 +76,19 @@ void main() {
       expect(response, equals(Left(InvalidCredentialsFailure())));
     });
   });
+
+  group("try auto login", () {
+    test("should return a Right with a valid UserEntity object if call to datasource is valid", () async {
+      const expected = UserEntity(id: "validId", email: "email@email.com", username: "validUsername");
+      when(mockAuthDatasource.tryAutoLogin()).thenAnswer((_) async => expected);
+      final response = await authRepositoryImpl.tryAutoLogin();
+      expect(response, equals(const Right(expected)));
+    });
+
+    test("should return a Left with a ServerFailure object if call to datasource is fail", () async {
+      when(mockAuthDatasource.tryAutoLogin()).thenThrow(ServerException());
+      final response = await authRepositoryImpl.tryAutoLogin();
+      expect(response, equals(Left(ServerFailure())));
+    });
+  });
 }
