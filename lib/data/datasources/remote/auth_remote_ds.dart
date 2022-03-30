@@ -26,6 +26,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     final responseLogin = await httpClient.post(Uri.parse(ServerConstants.url + ServerConstants.loginPath), body: {
       "email": email,
       "password": password,
+    }, headers: {
+      "Content-Type": "application/json"
     });
     if (json.decode(responseLogin.body)["code"] == ServerCodes.success) {
       await _saveTokenInStorage(json.decode(responseLogin.body)["result"]["token"]);

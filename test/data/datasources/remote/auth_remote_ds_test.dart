@@ -79,7 +79,7 @@ void main () {
 
     test("should make a validLogin returning a valid User", () async {
       final expected = UserEntity(id: "validId", email: email, username: "username");
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response(json.encode({
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
         "codeStatus": 200,
         "message": "sucesso na operação",
         "code": ServerCodes.success,
@@ -110,7 +110,7 @@ void main () {
     });
 
     test("should throw InvalidCredentials if call to api is fail", () async {
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response(json.encode({
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
         "codeStatus": 400,
         "message": "credentiais invalidas",
         "code": ServerCodes.invalidCredentials,
