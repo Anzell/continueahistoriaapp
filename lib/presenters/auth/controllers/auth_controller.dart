@@ -32,9 +32,8 @@ abstract class _AuthControllerBase with Store {
   Option<String> failure = const None();
 
   @action
-  void _setFailure(Failure failure) {
+  void _setFailure(Failure failure) =>
     this.failure = optionOf(FailureHelper.mapFailureToMessage(failure));
-  }
 
   @action
   Future<UserEntity?> signIn({String? email, String? password}) async {
