@@ -34,6 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on UsernameAlreadyExistsException {
       return Left(UsernameAlreadyRegisteredFailure());
     } catch(e){
+      print(e);
       return Left(ServerFailure());
     }
   }

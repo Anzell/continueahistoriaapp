@@ -56,10 +56,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<void> signUp({required String email, required String password, required String username}) async {
-    final response = await httpClient.post(Uri.parse(ServerConstants.url + ServerConstants.signUpPath), body: {
+    final response = await httpClient.post(Uri.parse(ServerConstants.url + ServerConstants.signUpPath), body: json.encode({
       "email": email,
       "username": username,
       "password": password,
+    }), headers: {
+      "Content-Type": "application/json"
     });
     if (json.decode(response.body)["code"] == ServerCodes.validationError) {
       throw ServerValidationException(message: json.decode(response.body)["message"]);
