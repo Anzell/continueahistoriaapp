@@ -13,7 +13,7 @@ import '../../models/user_model.dart';
 abstract class AuthRemoteDatasource {
   Future<void> signUp({required String email, required String password, required String username});
   Future<UserEntity> signIn({required String email, required String password});
-  Future<UserEntity> tryAutoLogin();
+  Future<UserEntity?> tryAutoLogin();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -31,8 +31,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       "Content-Type": "application/json"
     });
     if (json.decode(responseLogin.body)["code"] == ServerCodes.success) {
+      final user = await _getUser(json.decode(responseLogin.body)["result"]["id"]);
       await _saveTokenInStorage(json.decode(responseLogin.body)["result"]["token"]);
-      return await _getUser(json.decode(responseLogin.body)["result"]["id"]);
+      await _saveUserInStorage(user);
+      return user;
     }
     if (json.decode(responseLogin.body)["code"] == ServerCodes.invalidCredentials) {
       throw InvalidCredentialsException();
@@ -46,6 +48,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     await box.close();
   }
 
+  Future<void> _saveUserInStorage(UserEntity user) async {
+    final box = await hive.openBox(HiveStaticBoxes.loggedUser);
+    await box.put(HiveStaticKeys.userModel, UserMapper.entityToModel(user).toJson());
+    await box.close();
+  }
 
   Future<UserEntity> _getUser(String id) async {
     final path = ServerConstants.url + ServerConstants.getUserByIdPath + id;
@@ -59,7 +66,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     throw ServerException();
   }
 
-  Future<String> _getAuthorizationToken() async {
+  Future<String?> _getAuthorizationToken() async {
     final box = await hive.openBox(HiveStaticBoxes.authorization);
     final token = box.get(HiveStaticKeys.token);
     await box.close();
@@ -87,8 +94,14 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<UserEntity> tryAutoLogin() {
-    // TODO: implement tryAutoLogin
-    throw UnimplementedError();
+  Future<UserEntity?> tryAutoLogin() async {
+    if(await _getAuthorizationToken() == null) return null;
+    return await _getUserFromStorage();
+  }
+
+  Future<UserEntity> _getUserFromStorage() async {
+    final box = await hive.openBox(HiveStaticBoxes.loggedUser);
+    print(await box.get(HiveStaticKeys.userModel));
+    return UserMapper.modelToEntity(UserModel.fromJson(await box.get(HiveStaticKeys.userModel)));
   }
 }

@@ -45,8 +45,8 @@ class MockAuthRemoteDatasource extends _i1.Mock
           returnValue: Future<_i2.UserEntity>.value(_FakeUserEntity_0())) as _i4
       .Future<_i2.UserEntity>);
   @override
-  _i4.Future<_i2.UserEntity> tryAutoLogin() =>
+  _i4.Future<_i2.UserEntity?> tryAutoLogin() =>
       (super.noSuchMethod(Invocation.method(#tryAutoLogin, []),
-              returnValue: Future<_i2.UserEntity>.value(_FakeUserEntity_0()))
-          as _i4.Future<_i2.UserEntity>);
+              returnValue: Future<_i2.UserEntity?>.value())
+          as _i4.Future<_i2.UserEntity?>);
 }

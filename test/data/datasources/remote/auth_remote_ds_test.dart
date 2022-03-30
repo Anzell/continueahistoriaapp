@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:continueahistoriaapp/core/constants/hive_constants.dart';
 import 'package:continueahistoriaapp/core/constants/server_constants.dart';
 import 'package:continueahistoriaapp/core/failures/exceptions.dart';
 import 'package:continueahistoriaapp/data/datasources/remote/auth_remote_ds.dart';
@@ -102,7 +103,7 @@ void main () {
         }
       }), 200));
       final mockHiveBox = MockBox();
-      when(mockHiveInterface.box(any)).thenAnswer((_) => mockHiveBox);
+      when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
       when(mockHiveBox.put(any, any)).thenAnswer((_) => Future.value());
       when(mockHiveBox.get(any)).thenReturn("validToken");
       final result = await authRemoteDatasourceImpl.signIn(email: email, password: password);
@@ -120,5 +121,31 @@ void main () {
       expect(result, throwsA(isA<InvalidCredentialsException>()));
     });
 
+  });
+
+  group("auto login", () {
+
+  test("should return a valid user if authorization is setted", () async {
+    final expected = UserEntity(id: "validId", email: "email@valid.com", username: "username");
+    final mockHiveBox = MockBox();
+    when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
+    when(mockHiveBox.put(any, any)).thenAnswer((_) => Future.value());
+    when(mockHiveBox.get(HiveStaticKeys.token)).thenReturn("validToken");
+    when(mockHiveBox.get(HiveStaticKeys.userModel)).thenReturn({
+      "id": "validId",
+      "username": "username",
+      "email": "email@valid.com"
+    });
+    final result = await authRemoteDatasourceImpl.tryAutoLogin();
+    expect(result, equals(expected));
+  });
+
+  test("should return null if no one User is saved", () async {
+    final mockHiveBox = MockBox();
+    when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
+    when(mockHiveBox.get(HiveStaticKeys.token)).thenReturn(null);
+    final result = await authRemoteDatasourceImpl.tryAutoLogin();
+    expect(result, equals(null));
+  });
   });
 }
