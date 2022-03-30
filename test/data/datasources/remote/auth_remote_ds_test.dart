@@ -29,13 +29,15 @@ void main () {
     const password = "123456";
     
     test("should call the Api and test with a valid response", () async {
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response('{}', 201));
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response('{}', 201));
       await authRemoteDatasourceImpl.signUp(email: email, password: password, username: username);
-      verify(mockClient.post(any, body: anyNamed("body"))).called(1);
+      verify(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).called(1);
     });
     
     test("should throw a ServerValidationException if response is validation_failure", () async {
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response(json.encode({
+      when(mockClient.post(any, body: anyNamed("body"), headers: {
+        "Content-Type": "application/json"
+      })).thenAnswer((_) async => http.Response(json.encode({
         "codeStatus": 400,
         "message": "teste erro validacao",
         "code": ServerCodes.validationError,
@@ -43,11 +45,11 @@ void main () {
       }), 400));
       final response = authRemoteDatasourceImpl.signUp(email: email, password: password, username: username);
       expect(response, throwsA(isA<ServerValidationException>()));
-      verify(mockClient.post(any, body: anyNamed("body"))).called(1);
+      verify(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).called(1);
     });
 
     test("should throw a UsernameAlreadyRegistered if response is fail", () async {
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response(json.encode({
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
         "codeStatus": 400,
         "message": "teste erro validacao",
         "code": ServerCodes.usernameAlreadyRegistered,
@@ -55,11 +57,11 @@ void main () {
       }), 400));
       final response = authRemoteDatasourceImpl.signUp(email: email, password: password, username: username);
       expect(response, throwsA(isA<UsernameAlreadyExistsException>()));
-      verify(mockClient.post(any, body: anyNamed("body"))).called(1);
+      verify(mockClient.post(any, body: anyNamed("body"),headers: anyNamed("headers"))).called(1);
     });
 
     test("should throw a EmailAlreadyRegistered if response is fail", () async {
-      when(mockClient.post(any, body: anyNamed("body"))).thenAnswer((_) async => http.Response(json.encode({
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
         "codeStatus": 400,
         "message": "teste erro validacao",
         "code": ServerCodes.emailAlreadyRegistered,
@@ -67,7 +69,7 @@ void main () {
       }), 400));
       final response = authRemoteDatasourceImpl.signUp(email: email, password: password, username: username);
       expect(response, throwsA(isA<EmailAlreadyExistsException>()));
-      verify(mockClient.post(any, body: anyNamed("body"))).called(1);
+      verify(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).called(1);
     });
   });
 
