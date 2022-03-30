@@ -1,6 +1,8 @@
 import 'package:continueahistoriaapp/di/injector.dart';
 import 'package:continueahistoriaapp/domain/entities/user_entity.dart';
+import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/auth/controllers/auth_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/rooms_list_screen.dart';
 import 'package:continueahistoriaapp/presenters/widgets/icon_button.dart';
 import 'package:continueahistoriaapp/presenters/widgets/input_form.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,11 @@ class SignInScreen extends StatelessWidget {
                                 onTap: () async {
                                   setState(() => _loading = true);
                                   final result = await _signIn();
+                                  if (result != null) {
+                                    final appController = getIt.get<AppController>();
+                                    appController.setUser(result);
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RoomsListScreen()), (route) => false);
+                                  }
                                   setState(() => _loading = false);
                                 }),
                       )
@@ -74,12 +81,16 @@ class SignInScreen extends StatelessWidget {
 
   void _reactionFailureSetup(BuildContext context) {
     reaction(
-        (_) => authController.failure,
-        (_) => authController.failure.map((message) => showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: Text(message),
-                ))));
+      (_) => authController.failure,
+      (_) => authController.failure.map(
+        (message) => showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(message),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<UserEntity?> _signIn() async {

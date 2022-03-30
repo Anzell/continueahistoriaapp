@@ -28,11 +28,11 @@ mixin _$AppController on _AppControllerBase, Store {
       ActionController(name: '_AppControllerBase');
 
   @override
-  void _setUser(UserEntity user) {
+  void setUser(UserEntity user) {
     final _$actionInfo = _$_AppControllerBaseActionController.startAction(
-        name: '_AppControllerBase._setUser');
+        name: '_AppControllerBase.setUser');
     try {
-      return super._setUser(user);
+      return super.setUser(user);
     } finally {
       _$_AppControllerBaseActionController.endAction(_$actionInfo);
     }

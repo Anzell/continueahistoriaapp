@@ -10,5 +10,5 @@ abstract class _AppControllerBase with Store {
   UserEntity? user;
 
   @action
-  void _setUser(UserEntity user) => this.user = user;
+  void setUser(UserEntity user) => this.user = user;
 }
