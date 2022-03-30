@@ -46,6 +46,7 @@ abstract class _RoomsControllerBase with Store {
           _setFailure(failure);
           completer.complete();
         }, (list) {
+          print(list);
           this.listResumedRooms = list;
           completer.complete();
         });

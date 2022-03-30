@@ -39,4 +39,14 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, UserEntity>> tryAutoLogin() async {
+    try {
+      final result = await datasource.tryAutoLogin();
+      return Right(result);
+    }catch(e){
+      return Left(ServerFailure());
+    }
+  }
+
 }

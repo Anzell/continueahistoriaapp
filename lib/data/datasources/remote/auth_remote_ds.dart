@@ -13,6 +13,7 @@ import '../../models/user_model.dart';
 abstract class AuthRemoteDatasource {
   Future<void> signUp({required String email, required String password, required String username});
   Future<UserEntity> signIn({required String email, required String password});
+  Future<UserEntity> tryAutoLogin();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -83,5 +84,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     if (json.decode(response.body)["code"] == ServerCodes.emailAlreadyRegistered) {
       throw EmailAlreadyExistsException();
     }
+  }
+
+  @override
+  Future<UserEntity> tryAutoLogin() {
+    // TODO: implement tryAutoLogin
+    throw UnimplementedError();
   }
 }
