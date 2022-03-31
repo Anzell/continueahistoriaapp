@@ -16,6 +16,7 @@ class RoomRepositoryImpl implements RoomRepository {
       final response = await datasource.getPlayerRooms(userId: userId);
       return Right(response);
     }catch (e){
+      print(e);
       return Left(ServerFailure());
     }
   }

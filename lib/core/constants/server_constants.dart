@@ -3,7 +3,7 @@ class ServerConstants{
   static const signUpPath = "/api/register/user";
   static const loginPath = "/api/login/user";
   static const getUserByIdPath = "/api/user/";
-  static const getRoomsOfPlayer = "/api/user/";
+  static const getRoomsOfPlayer = "/api/rooms/";
 }
 
 class ServerCodes {

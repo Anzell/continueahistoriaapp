@@ -20,7 +20,7 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
 
   @override
   Future<List<ResumedGameRoom>> getPlayerRooms({required String userId}) async {
-    final path = ServerConstants.url + ServerConstants.getRoomsOfPlayer + "/$userId";
+    final path = ServerConstants.url + ServerConstants.getRoomsOfPlayer + userId;
     final response = await httpClient.get(Uri.parse(path), headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer ${await _getAuthorizationToken()}",
@@ -34,5 +34,10 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
 
   ResumedGameRoom parseResumedGameRoomModelToEntity(ResumedGameRoomModel model) => ResumedGameRoomMapper.modelToEntity(model);
 
-  Future<String> _getAuthorizationToken() async => hive.box(HiveStaticBoxes.authorization).get(HiveStaticKeys.token);
+  Future<String> _getAuthorizationToken() async {
+    final box = await hive.openBox(HiveStaticBoxes.authorization);
+    final token = await box.get(HiveStaticKeys.token);
+    await box.close();
+    return token;
+  }
 }

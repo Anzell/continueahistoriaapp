@@ -99,9 +99,15 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     return await _getUserFromStorage();
   }
 
-  Future<UserEntity> _getUserFromStorage() async {
+  Future<UserEntity?> _getUserFromStorage() async {
     final box = await hive.openBox(HiveStaticBoxes.loggedUser);
-    print(await box.get(HiveStaticKeys.userModel));
-    return UserMapper.modelToEntity(UserModel.fromJson(await box.get(HiveStaticKeys.userModel)));
+    final userJson = await box.get(HiveStaticKeys.userModel);
+    if(userJson == null) return null;
+    await box.close();
+    return UserMapper.modelToEntity(UserModel.fromJson({
+      "email": userJson["email"],
+      "username": userJson["username"],
+      "id": userJson["id"]
+    }));
   }
 }

@@ -1,27 +1,50 @@
 import 'package:continueahistoriaapp/di/injector.dart';
+import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/auth/controllers/auth_controller.dart';
 import 'package:continueahistoriaapp/presenters/auth/sign_in_screen.dart';
+import 'package:continueahistoriaapp/presenters/rooms/rooms_list_screen.dart';
 import 'package:continueahistoriaapp/presenters/widgets/icon_button.dart';
 import 'package:continueahistoriaapp/presenters/widgets/input_form.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final authController = getIt.get<AuthController>();
+  bool _registering = false;
+  bool _loadingPage = false;
 
-  bool _loading = false;
+  @override
+  void initState() {
+    super.initState();
+    _tryAutoLogin();
+  }
+
+  Future<void> _tryAutoLogin() async {
+    setState(() => _loadingPage = true);
+    final result = await authController.tryAutoLogin();
+    if(result != null){
+      getIt.get<AppController>().setUser(result);
+      _goToRoomsScreen();
+    }
+    setState(() => _loadingPage = false);
+  }
 
   @override
   Widget build(BuildContext context) {
     _failureReactionSetup(context);
     return Scaffold(
-      body: Container(
+      body: _loadingPage ? Center(child: CircularProgressIndicator()) : Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,22 +79,20 @@ class HomeScreen extends StatelessWidget {
                         secretText: true,
                       ),
                       SizedBox(height: 10),
-                      StatefulBuilder(
-                        builder: (context, setState) => _loading
-                            ? CircularProgressIndicator()
-                            : CustomIconButton(
-                                icon: Icon(Icons.navigate_next),
-                                backgroundColor: Colors.white,
-                                onTap: () async {
-                                  setState(() => _loading = true);
-                                  await _signUp();
-                                  if(authController.failure.isNone()){
-                                    //TODO go to main screen
-                                  }
-                                  setState(() => _loading = false);
-                                },
-                              ),
-                      )
+                      _registering
+                          ? CircularProgressIndicator()
+                          : CustomIconButton(
+                              icon: Icon(Icons.navigate_next),
+                              backgroundColor: Colors.white,
+                              onTap: () async {
+                                setState(() => _registering = true);
+                                await _signUp();
+                                if (authController.failure.isNone()) {
+                                  _goToRoomsScreen();
+                                }
+                                setState(() => _registering = false);
+                              },
+                            ),
                     ],
                   ),
                 ),
@@ -114,6 +135,13 @@ class HomeScreen extends StatelessWidget {
       password: passwordController.text,
       email: emailController.text,
       username: usernameController.text,
+    );
+  }
+
+  void _goToRoomsScreen() async {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => RoomsListScreen()),
+          (route) => false,
     );
   }
 }

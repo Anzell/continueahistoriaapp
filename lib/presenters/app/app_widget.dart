@@ -1,4 +1,4 @@
-import 'package:continueahistoriaapp/presenters/auth/home/home_screen.dart';
+import 'package:continueahistoriaapp/presenters/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_colors.dart';

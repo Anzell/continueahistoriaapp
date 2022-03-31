@@ -45,6 +45,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await datasource.tryAutoLogin();
       return Right(result);
     }catch(e){
+      print(e);
       return Left(ServerFailure());
     }
   }
