@@ -1,4 +1,5 @@
 import 'package:continueahistoriaapp/di/injector.dart';
+import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
 import 'package:flutter/material.dart';
@@ -41,17 +42,20 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
           ? Center(child: CircularProgressIndicator())
           : SizedBox(
               width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ListView.builder(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
                       shrinkWrap: true,
                       itemCount: roomsController.listResumedRooms.length,
-                      itemBuilder: (context, index) => Card(
-                            child: Text("${roomsController.listResumedRooms[index].title}"),
-                          ))
-                ],
+                      itemBuilder: (context, index) => _CardResumedRoom(
+                        resumedGameRoom: roomsController.listResumedRooms[index],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
     );
@@ -75,5 +79,34 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
     setState(() {
       _loading = value;
     });
+  }
+}
+
+class _CardResumedRoom extends StatelessWidget {
+  final ResumedGameRoom resumedGameRoom;
+  const _CardResumedRoom({Key? key, required this.resumedGameRoom}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(resumedGameRoom.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                SizedBox(height: 10),
+                Text("${resumedGameRoom.playersNumber} Jogadores"),
+                Text("${resumedGameRoom.phrasesNumber} frases")
+              ],
+            ),
+            Icon(Icons.navigate_next)
+          ],
+        ),
+      ),
+    );
   }
 }
