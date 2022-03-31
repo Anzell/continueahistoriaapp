@@ -32,6 +32,22 @@ mixin _$AuthController on _AuthControllerBase, Store {
         .run(() => super.signIn(email: email, password: password));
   }
 
+  final _$signUpAsyncAction = AsyncAction('_AuthControllerBase.signUp');
+
+  @override
+  Future<void> signUp({String? email, String? password, String? username}) {
+    return _$signUpAsyncAction.run(() =>
+        super.signUp(email: email, password: password, username: username));
+  }
+
+  final _$tryAutoLoginAsyncAction =
+      AsyncAction('_AuthControllerBase.tryAutoLogin');
+
+  @override
+  Future<UserEntity?> tryAutoLogin() {
+    return _$tryAutoLoginAsyncAction.run(() => super.tryAutoLogin());
+  }
+
   final _$_AuthControllerBaseActionController =
       ActionController(name: '_AuthControllerBase');
 

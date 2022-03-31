@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:continueahistoriaapp/core/helpers/failure_helper.dart';
+import 'package:continueahistoriaapp/core/usecases/future_usecases.dart';
 import 'package:continueahistoriaapp/domain/entities/user_entity.dart';
+import 'package:continueahistoriaapp/domain/usecases/auth/auto_login.dart';
 import 'package:continueahistoriaapp/domain/usecases/auth/sign_in.dart';
 import 'package:continueahistoriaapp/domain/usecases/auth/sign_up.dart';
 import 'package:continueahistoriaapp/presenters/auth/converters/sign_in_converter.dart';
@@ -16,24 +18,25 @@ part 'auth_controller.g.dart';
 class AuthController = _AuthControllerBase with _$AuthController;
 
 abstract class _AuthControllerBase with Store {
-  late SignUpUseCase signUpUseCase;
-  late SignInUseCase signInUseCase;
-  late SignUpConverter signUpConverter;
-  late SignInConverter signInConverter;
+  final SignUpUseCase signUpUseCase;
+  final SignInUseCase signInUseCase;
+  final AutoLoginUsecase autoLoginUsecase;
+  final SignUpConverter signUpConverter;
+  final SignInConverter signInConverter;
 
   _AuthControllerBase({
     required this.signInConverter,
     required this.signUpConverter,
     required this.signInUseCase,
     required this.signUpUseCase,
+    required this.autoLoginUsecase,
   });
 
   @observable
   Option<String> failure = const None();
 
   @action
-  void _setFailure(Failure failure) =>
-    this.failure = optionOf(FailureHelper.mapFailureToMessage(failure));
+  void _setFailure(Failure failure) => this.failure = optionOf(FailureHelper.mapFailureToMessage(failure));
 
   @action
   Future<UserEntity?> signIn({String? email, String? password}) async {
@@ -65,6 +68,7 @@ abstract class _AuthControllerBase with Store {
     return userTemp;
   }
 
+  @action
   Future<void> signUp({String? email, String? password, String? username}) async {
     failure = None();
     final completer = Completer();
@@ -87,5 +91,14 @@ abstract class _AuthControllerBase with Store {
       });
     });
     await completer.future;
+  }
+
+  @action
+  Future<UserEntity?> tryAutoLogin() async {
+    final usecaseResult = await autoLoginUsecase(NoParams());
+    return usecaseResult.fold((failure) {
+      _setFailure(failure);
+      return null;
+    }, (user) => user);
   }
 }

@@ -11,6 +11,7 @@ class ControllersInjector {
         signInUseCase: getIt(),
         signInConverter: getIt(),
         signUpUseCase: getIt(),
+        autoLoginUsecase: getIt(),
       ),
     );
     getIt.registerLazySingleton<AppController>(() => AppController());
