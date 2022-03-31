@@ -1,0 +1,13 @@
+{
+  "id": "validId",
+  "name": "era uma vez",
+  "playersIds": ["player1"],
+  "adminsIds": ["admin1"],
+  "history": [
+    {
+      "phrase": "era uma vez",
+      "senderId": "validId",
+      "sendAt": 1633834800000
+    }
+  ]
+}

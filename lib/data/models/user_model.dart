@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(anyMap: true, explicitToJson: true, includeIfNull: false)
 class UserModel extends UserEntity {
   const UserModel({
     String? id,

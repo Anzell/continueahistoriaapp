@@ -6,8 +6,7 @@ part of 'resumed_game_room_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ResumedGameRoomModel _$ResumedGameRoomModelFromJson(
-        Map<String, dynamic> json) =>
+ResumedGameRoomModel _$ResumedGameRoomModelFromJson(Map json) =>
     ResumedGameRoomModel(
       id: json['id'] as String,
       title: json['title'] as String,

@@ -4,7 +4,7 @@ import '../../domain/entities/resumed_game_room.dart';
 
 part 'resumed_game_room_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(anyMap: true, explicitToJson: true, includeIfNull: false)
 class ResumedGameRoomModel extends ResumedGameRoom {
   ResumedGameRoomModel({
     required String id,
