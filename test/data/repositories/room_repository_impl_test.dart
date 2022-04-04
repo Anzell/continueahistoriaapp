@@ -2,6 +2,8 @@ import 'package:continueahistoriaapp/core/failures/exceptions.dart';
 import 'package:continueahistoriaapp/core/failures/failures.dart';
 import 'package:continueahistoriaapp/data/datasources/remote/room_remote_ds.dart';
 import 'package:continueahistoriaapp/data/repositories/room_repository_impl.dart';
+import 'package:continueahistoriaapp/domain/entities/game_room.dart';
+import 'package:continueahistoriaapp/domain/entities/phrase.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +37,42 @@ void main(){
       when(mockRoomRemoteDs.getPlayerRooms(userId: anyNamed("userId"))).thenThrow(ServerException());
       final result = await roomRepositoryImpl.getPlayerRooms(userId: "validId");
       expect(result, equals(Left(ServerFailure())));
+    });
+  });
+  
+  group("listen room", () {
+    test("should emit valid game rooms if datasource listener is active", () {
+      final emit1 =  GameRoom(
+          id: "validId",
+          name: "era uma vez",
+          playersIds: ["player1"],
+          adminsIds: ["admin1"],
+          history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10))]);
+      final emit2 =  GameRoom(
+          id: "validId",
+          name: "era uma vez",
+          playersIds: ["player1"],
+          adminsIds: ["admin1"],
+          history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10)), Phrase(phrase: "um cara que", senderId: "validId", sendAt: DateTime(2021,11,11))]);
+      when(mockRoomRemoteDs.listenRoomUpdate(roomId: anyNamed("roomId"))).thenAnswer((_) async* {
+        yield emit1;
+        yield emit2;
+      });
+      expectLater(roomRepositoryImpl.listenRoom(roomId: "validId"), emitsInOrder([Right(emit1), Right(emit2)]));
+    });
+
+    test("should emit server failures if call to datasource throws error", () {
+      final emit1 =  GameRoom(
+          id: "validId",
+          name: "era uma vez",
+          playersIds: ["player1"],
+          adminsIds: ["admin1"],
+          history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10))]);
+      when(mockRoomRemoteDs.listenRoomUpdate(roomId: anyNamed("roomId"))).thenAnswer((_) async* {
+        yield emit1;
+        throw ServerException();
+      });
+      expectLater(roomRepositoryImpl.listenRoom(roomId: "validId"), emitsInOrder([Right(emit1), Left(ServerFailure())]));
     });
   });
 }

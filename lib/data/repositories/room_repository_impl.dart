@@ -1,4 +1,5 @@
 import 'package:continueahistoriaapp/data/datasources/remote/room_remote_ds.dart';
+import 'package:continueahistoriaapp/domain/entities/game_room.dart';
 import 'package:continueahistoriaapp/domain/repositories/room_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -16,8 +17,19 @@ class RoomRepositoryImpl implements RoomRepository {
       final response = await datasource.getPlayerRooms(userId: userId);
       return Right(response);
     }catch (e){
-      print(e);
       return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Stream<Either<Failure, GameRoom>> listenRoom({required String roomId}) async* {
+    try{
+      final stream = datasource.listenRoomUpdate(roomId: roomId);
+      await for (final room in stream){
+        yield Right(room);
+      }
+    }catch(e){
+      yield Left(ServerFailure());
     }
   }
 }
