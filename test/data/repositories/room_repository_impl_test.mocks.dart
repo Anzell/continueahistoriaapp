@@ -6,6 +6,7 @@ import 'dart:async' as _i3;
 
 import 'package:continueahistoriaapp/data/datasources/remote/room_remote_ds.dart'
     as _i2;
+import 'package:continueahistoriaapp/domain/entities/game_room.dart' as _i5;
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart'
     as _i4;
 import 'package:mockito/mockito.dart' as _i1;
@@ -35,4 +36,10 @@ class MockRoomRemoteDs extends _i1.Mock implements _i2.RoomRemoteDs {
               returnValue: Future<List<_i4.ResumedGameRoom>>.value(
                   <_i4.ResumedGameRoom>[]))
           as _i3.Future<List<_i4.ResumedGameRoom>>);
+  @override
+  _i3.Stream<_i5.GameRoom> listenRoomUpdate({String? roomId}) =>
+      (super.noSuchMethod(
+              Invocation.method(#listenRoomUpdate, [], {#roomId: roomId}),
+              returnValue: Stream<_i5.GameRoom>.empty())
+          as _i3.Stream<_i5.GameRoom>);
 }

@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:continueahistoriaapp/core/constants/hive_constants.dart';
+import 'package:continueahistoriaapp/core/external/socket_service.dart';
 import 'package:continueahistoriaapp/di/injector.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +8,8 @@ class ExternalInjector {
   static Future<void> inject() async {
     final directory = await getApplicationDocumentsDirectory();
     Hive.init(directory.path);
-    //await Hive.openLazyBox(HiveStaticBoxes.authorization);
     getIt.registerFactory<HiveInterface>(() => Hive);
     getIt.registerFactory<http.Client>(() => http.Client());
+    getIt.registerFactory<SocketService>(() => SocketServiceImpl(hive: getIt()));
   }
 }

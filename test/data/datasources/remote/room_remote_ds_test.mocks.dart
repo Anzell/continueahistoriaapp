@@ -6,6 +6,7 @@ import 'dart:async' as _i6;
 import 'dart:convert' as _i7;
 import 'dart:typed_data' as _i8;
 
+import 'package:continueahistoriaapp/core/external/socket_service.dart' as _i12;
 import 'package:hive/hive.dart' as _i4;
 import 'package:hive/src/box/default_compaction_strategy.dart' as _i11;
 import 'package:hive/src/box/default_key_comparator.dart' as _i10;
@@ -345,4 +346,26 @@ class MockBox<E> extends _i1.Mock implements _i4.Box<E> {
   _i6.Future<void> flush() => (super.noSuchMethod(Invocation.method(#flush, []),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+}
+
+/// A class which mocks [SocketService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSocketService extends _i1.Mock implements _i12.SocketService {
+  MockSocketService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<void> initSocket() =>
+      (super.noSuchMethod(Invocation.method(#initSocket, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+  @override
+  _i6.Stream<dynamic> eventListener(
+          {String? event, dynamic Function(dynamic)? onEvent}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #eventListener, [], {#event: event, #onEvent: onEvent}),
+          returnValue: Stream<dynamic>.empty()) as _i6.Stream<dynamic>);
 }

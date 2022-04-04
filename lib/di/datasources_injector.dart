@@ -5,6 +5,6 @@ import 'package:continueahistoriaapp/di/injector.dart';
 class DatasourcesInjector {
   static Future<void> inject() async {
     getIt.registerFactory<AuthRemoteDatasource>(() => AuthRemoteDatasourceImpl(httpClient: getIt(), hive: getIt()));
-    getIt.registerFactory<RoomRemoteDs>(() => RoomRemoteDsImpl(httpClient: getIt(), hive: getIt()));
+    getIt.registerFactory<RoomRemoteDs>(() => RoomRemoteDsImpl(httpClient: getIt(), hive: getIt(), socketService: getIt()));
   }
 }
