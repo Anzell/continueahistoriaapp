@@ -88,7 +88,7 @@ void main() {
           {"phrase": "era uma vez", "senderId": "validId", "sendAt": 1633834800000}
         ]
       };
-      when(mockSocket.eventListener(event: anyNamed("event"), onEvent: anyNamed("onEvent"))).thenAnswer((_) async* {
+      when(mockSocket.eventListener(event: anyNamed("event"))).thenAnswer((_) async* {
         yield emit1;
         yield emit2;
       });
