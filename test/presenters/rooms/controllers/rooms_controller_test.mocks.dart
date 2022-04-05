@@ -5,12 +5,15 @@
 import 'dart:async' as _i5;
 
 import 'package:continueahistoriaapp/core/failures/failures.dart' as _i6;
+import 'package:continueahistoriaapp/domain/entities/game_room.dart' as _i9;
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart'
     as _i7;
 import 'package:continueahistoriaapp/domain/repositories/room_repository.dart'
     as _i2;
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart'
     as _i4;
+import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart'
+    as _i8;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -49,4 +52,26 @@ class MockGetPlayerRoomsUsecase extends _i1.Mock
                       _i3.Either<_i6.Failure, List<_i7.ResumedGameRoom>>>.value(
                   _FakeEither_1<_i6.Failure, List<_i7.ResumedGameRoom>>()))
           as _i5.Future<_i3.Either<_i6.Failure, List<_i7.ResumedGameRoom>>>);
+}
+
+/// A class which mocks [ListenRoomByIdUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockListenRoomByIdUsecase extends _i1.Mock
+    implements _i8.ListenRoomByIdUsecase {
+  MockListenRoomByIdUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.RoomRepository get repository =>
+      (super.noSuchMethod(Invocation.getter(#repository),
+          returnValue: _FakeRoomRepository_0()) as _i2.RoomRepository);
+  @override
+  _i5.Stream<_i3.Either<_i6.Failure, _i9.GameRoom>> call(
+          _i8.ListenRoomByIdUsecaseParams? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue:
+                  Stream<_i3.Either<_i6.Failure, _i9.GameRoom>>.empty())
+          as _i5.Stream<_i3.Either<_i6.Failure, _i9.GameRoom>>);
 }
