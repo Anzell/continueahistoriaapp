@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:continueahistoriaapp/core/helpers/failure_helper.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
@@ -16,10 +17,12 @@ class RoomsController = _RoomsControllerBase with _$RoomsController;
 abstract class _RoomsControllerBase with Store {
   final GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
   final GetPlayerRoomsUsecase getPlayerRoomsUsecase;
+  final ListenRoomByIdUsecase listenRoomByIdUsecase;
 
   _RoomsControllerBase({
     required this.getPlayerRoomsUsecase,
     required this.getRoomsByPlayerIdConverter,
+    required this.listenRoomByIdUsecase,
 });
 
   @observable
@@ -33,7 +36,7 @@ abstract class _RoomsControllerBase with Store {
 
   @action
   Future<void> getRoomsByPlayerId({String? userId}) async {
-    this.failure = None();
+    failure = const None();
     final completer = Completer();
     Future(() {
       final converterResult = getRoomsByPlayerIdConverter(GetRoomsByPlayerIdConverterParams(userId: userId));
@@ -46,13 +49,13 @@ abstract class _RoomsControllerBase with Store {
           _setFailure(failure);
           completer.complete();
         }, (list) {
-          print(list);
-          this.listResumedRooms = list;
+          listResumedRooms = list;
           completer.complete();
         });
       });
     });
     await completer.future;
   }
+
 
 }

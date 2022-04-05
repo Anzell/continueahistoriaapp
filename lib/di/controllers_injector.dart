@@ -18,6 +18,7 @@ class ControllersInjector {
     getIt.registerFactory<RoomsController>(() => RoomsController(
       getRoomsByPlayerIdConverter: getIt(),
       getPlayerRoomsUsecase: getIt(),
+      listenRoomByIdUsecase: getIt(),
     ));
   }
 }
