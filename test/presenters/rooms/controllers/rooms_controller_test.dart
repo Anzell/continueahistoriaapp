@@ -4,6 +4,7 @@ import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart'
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -15,6 +16,7 @@ import 'rooms_controller_test.mocks.dart';
 void main() {
   late MockGetPlayerRoomsUsecase mockGetPlayerRoomsUsecase;
   late GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
+  late ListenRoomByIdConverter listenRoomByIdConverter;
   late RoomsController roomsController;
   late MockListenRoomByIdUsecase mockListenRoomByIdUsecase;
 
@@ -22,10 +24,12 @@ void main() {
     mockGetPlayerRoomsUsecase = MockGetPlayerRoomsUsecase();
     getRoomsByPlayerIdConverter = GetRoomsByPlayerIdConverter();
     mockListenRoomByIdUsecase = MockListenRoomByIdUsecase();
+    listenRoomByIdConverter = ListenRoomByIdConverter();
     roomsController = RoomsController(
       getPlayerRoomsUsecase: mockGetPlayerRoomsUsecase,
       getRoomsByPlayerIdConverter: GetRoomsByPlayerIdConverter(),
       listenRoomByIdUsecase: mockListenRoomByIdUsecase,
+      listenRoomByIdConverter: listenRoomByIdConverter,
     );
   });
 

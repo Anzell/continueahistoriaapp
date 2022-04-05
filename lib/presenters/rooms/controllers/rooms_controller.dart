@@ -5,6 +5,7 @@ import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
@@ -18,11 +19,13 @@ abstract class _RoomsControllerBase with Store {
   final GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
   final GetPlayerRoomsUsecase getPlayerRoomsUsecase;
   final ListenRoomByIdUsecase listenRoomByIdUsecase;
+  final ListenRoomByIdConverter listenRoomByIdConverter;
 
   _RoomsControllerBase({
     required this.getPlayerRoomsUsecase,
     required this.getRoomsByPlayerIdConverter,
     required this.listenRoomByIdUsecase,
+    required this.listenRoomByIdConverter,
 });
 
   @observable

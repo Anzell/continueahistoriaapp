@@ -19,6 +19,7 @@ class ControllersInjector {
       getRoomsByPlayerIdConverter: getIt(),
       getPlayerRoomsUsecase: getIt(),
       listenRoomByIdUsecase: getIt(),
+      listenRoomByIdConverter: getIt(),
     ));
   }
 }
