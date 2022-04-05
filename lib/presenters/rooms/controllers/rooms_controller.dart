@@ -10,6 +10,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../core/failures/failures.dart';
+import '../../../domain/entities/game_room.dart';
 
 part 'rooms_controller.g.dart';
 
@@ -60,5 +61,17 @@ abstract class _RoomsControllerBase with Store {
     await completer.future;
   }
 
+  @observable
+  GameRoom? listeningRoom;
+
+  @action
+  void listenRoomById({String? roomId}) {
+    final converterResult = listenRoomByIdConverter(ListenRoomByIdConverterParams(roomId: roomId));
+    converterResult.fold(_setFailure, (converted) {
+      listenRoomByIdUsecase(ListenRoomByIdUsecaseParams(roomId: converted.roomId)).listen((event) {
+        event.fold(_setFailure, (room) => listeningRoom = room);
+      });
+    });
+  }
 
 }

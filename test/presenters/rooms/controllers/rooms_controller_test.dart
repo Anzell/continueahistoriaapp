@@ -1,4 +1,7 @@
+import 'package:continueahistoriaapp/core/constants/error_messages.dart';
 import 'package:continueahistoriaapp/core/failures/failures.dart';
+import 'package:continueahistoriaapp/domain/entities/game_room.dart';
+import 'package:continueahistoriaapp/domain/entities/phrase.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
@@ -7,6 +10,7 @@ import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_pl
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobx/mobx.dart' as mobx;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -55,5 +59,41 @@ void main() {
       expect(roomsController.listResumedRooms, equals([]));
       expect(roomsController.failure.isNone(), equals(false));
     });
+  });
+
+  group("listen room by id", () {
+    test("should emit a valid Room when call to usecase and converter are valid", () {
+      final emit1 =  GameRoom(
+          id: "validId",
+          name: "era uma vez",
+          playersIds: ["player1"],
+          adminsIds: ["admin1"],
+          history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10))]);
+      when(mockListenRoomByIdUsecase(any)).thenAnswer((_) async* {
+        yield Right(emit1);
+      });
+      roomsController.listenRoomById(roomId: "validId");
+      mobx.reaction((_) => roomsController.listeningRoom, (_) {
+        expect(roomsController.listeningRoom, equals(emit1));
+      });
+    });
+
+    test("should set a failure when call to converter is fail", () {
+      roomsController.listenRoomById(roomId: "");
+      mobx.reaction((_) => roomsController.failure, (_) {
+        expect(roomsController.failure, equals(ListenRoomByIdConverterErrorMessages.missingRoomId));
+      });
+    });
+
+    test("should set a failure when call to usecase is fail", () {
+      when(mockListenRoomByIdUsecase(any)).thenAnswer((_) async* {
+        yield Left(ServerFailure());
+      });
+      roomsController.listenRoomById(roomId: "validId");
+      mobx.reaction((_) => roomsController.failure, (_) {
+        expect(roomsController.failure, equals(ErrorMessages.serverFailure));
+      });
+    });
+
   });
 }

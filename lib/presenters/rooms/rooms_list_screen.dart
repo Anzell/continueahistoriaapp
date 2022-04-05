@@ -39,7 +39,7 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
         title: Text("Olá ${appController.user!.username}"),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Padding(
@@ -90,20 +90,20 @@ class _CardResumedRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(resumedGameRoom.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
-                SizedBox(height: 10),
+                Text(resumedGameRoom.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                const SizedBox(height: 10),
                 Text("${resumedGameRoom.playersNumber} Jogadores"),
                 Text("${resumedGameRoom.phrasesNumber} frases")
               ],
             ),
-            Icon(Icons.navigate_next)
+            const Icon(Icons.navigate_next)
           ],
         ),
       ),

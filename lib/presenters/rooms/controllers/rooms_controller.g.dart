@@ -40,6 +40,21 @@ mixin _$RoomsController on _RoomsControllerBase, Store {
     });
   }
 
+  final _$listeningRoomAtom = Atom(name: '_RoomsControllerBase.listeningRoom');
+
+  @override
+  GameRoom? get listeningRoom {
+    _$listeningRoomAtom.reportRead();
+    return super.listeningRoom;
+  }
+
+  @override
+  set listeningRoom(GameRoom? value) {
+    _$listeningRoomAtom.reportWrite(value, super.listeningRoom, () {
+      super.listeningRoom = value;
+    });
+  }
+
   final _$getRoomsByPlayerIdAsyncAction =
       AsyncAction('_RoomsControllerBase.getRoomsByPlayerId');
 
@@ -64,10 +79,22 @@ mixin _$RoomsController on _RoomsControllerBase, Store {
   }
 
   @override
+  void listenRoomById({String? roomId}) {
+    final _$actionInfo = _$_RoomsControllerBaseActionController.startAction(
+        name: '_RoomsControllerBase.listenRoomById');
+    try {
+      return super.listenRoomById(roomId: roomId);
+    } finally {
+      _$_RoomsControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 failure: ${failure},
-listResumedRooms: ${listResumedRooms}
+listResumedRooms: ${listResumedRooms},
+listeningRoom: ${listeningRoom}
     ''';
   }
 }
