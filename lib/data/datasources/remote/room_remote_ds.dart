@@ -17,6 +17,7 @@ import '../../../core/constants/server_constants.dart';
 abstract class RoomRemoteDs {
   Future<List<ResumedGameRoom>> getPlayerRooms({required String userId});
   Stream<GameRoom> listenRoomUpdate({required String roomId});
+  Future<void> sendPhrase({required String roomId, required String userId, required String phrase});
 }
 
 class RoomRemoteDsImpl implements RoomRemoteDs {
@@ -73,6 +74,19 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
     final user = await box.get(HiveStaticKeys.userModel);
     await box.close();
     return user["id"];
+  }
+
+  @override
+  Future<void> sendPhrase({required String roomId, required String userId, required String phrase}) async {
+    socketService.emitEvent(data: {
+        "type": TypeSocketMessages.sendPhraseToHistory,
+        "content":{
+          "phrase": phrase,
+          "roomId": roomId,
+          "userId": userId
+        }
+      }
+    );
   }
 
 }

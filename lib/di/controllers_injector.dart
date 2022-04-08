@@ -20,6 +20,8 @@ class ControllersInjector {
       getPlayerRoomsUsecase: getIt(),
       listenRoomByIdUsecase: getIt(),
       listenRoomByIdConverter: getIt(),
+      sendPhraseConverter: getIt(),
+      sendPhraseUseCase: getIt(),
     ));
   }
 }

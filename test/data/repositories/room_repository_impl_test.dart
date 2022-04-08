@@ -75,4 +75,18 @@ void main(){
       expectLater(roomRepositoryImpl.listenRoom(roomId: "validId"), emitsInOrder([Right(emit1), Left(ServerFailure())]));
     });
   });
+
+  group("send phrase", () {
+    test("should return None if call to datasource is success", () async {
+      when(mockRoomRemoteDs.sendPhrase(roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase"))).thenAnswer((_) async => Future.value(null));
+      final result = await roomRepositoryImpl.sendPhrase(roomId: "valid", userId: "valid", phrase: "era uma vez");
+      expect(result, equals(Right(None())));
+    });
+
+    test("should return None if call to datasource is success", () async {
+      when(mockRoomRemoteDs.sendPhrase(roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase"))).thenThrow(ServerException());
+      final result = await roomRepositoryImpl.sendPhrase(roomId: "valid", userId: "valid", phrase: "era uma vez");
+      expect(result, equals(Left(ServerFailure())));
+    });
+  });
 }

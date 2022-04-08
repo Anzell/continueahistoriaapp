@@ -6,4 +6,5 @@ import 'package:dartz/dartz.dart';
 abstract class RoomRepository {
   Future<Either<Failure, List<ResumedGameRoom>>> getPlayerRooms({required String userId});
   Stream<Either<Failure, GameRoom>> listenRoom({required String roomId});
+  Future<Either<Failure, None>> sendPhrase({required String roomId, required String userId, required String phrase});
 }

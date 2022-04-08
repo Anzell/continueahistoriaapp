@@ -115,4 +115,12 @@ void main() {
           ]));
     });
   });
+  
+  group("send phrase", () {
+    test("should call socketService and emit data", () async {
+      when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => Future.value(null));
+      await roomRemoteDsImpl.sendPhrase(roomId: "validId", userId: "validId", phrase: "era uma vez");
+      verify(mockSocket.emitEvent(data: anyNamed("data"))).called(1);
+    });
+  });
 }

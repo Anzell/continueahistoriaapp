@@ -42,4 +42,12 @@ class MockRoomRemoteDs extends _i1.Mock implements _i2.RoomRemoteDs {
               Invocation.method(#listenRoomUpdate, [], {#roomId: roomId}),
               returnValue: Stream<_i5.GameRoom>.empty())
           as _i3.Stream<_i5.GameRoom>);
+  @override
+  _i3.Future<void> sendPhrase(
+          {String? roomId, String? userId, String? phrase}) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendPhrase, [],
+              {#roomId: roomId, #userId: userId, #phrase: phrase}),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
 }
