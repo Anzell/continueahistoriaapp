@@ -5,9 +5,11 @@ import 'package:continueahistoriaapp/domain/entities/phrase.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/send_phrase_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobx/mobx.dart' as mobx;
@@ -16,12 +18,14 @@ import 'package:mockito/mockito.dart';
 
 import 'rooms_controller_test.mocks.dart';
 
-@GenerateMocks([GetPlayerRoomsUsecase, ListenRoomByIdUsecase])
+@GenerateMocks([GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase])
 void main() {
   late MockGetPlayerRoomsUsecase mockGetPlayerRoomsUsecase;
   late GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
   late ListenRoomByIdConverter listenRoomByIdConverter;
   late RoomsController roomsController;
+  late SendPhraseConverter sendPhraseConverter;
+  late MockSendPhraseUseCase mockSendPhraseUseCase;
   late MockListenRoomByIdUsecase mockListenRoomByIdUsecase;
 
   setUp(() {
@@ -29,11 +33,15 @@ void main() {
     getRoomsByPlayerIdConverter = GetRoomsByPlayerIdConverter();
     mockListenRoomByIdUsecase = MockListenRoomByIdUsecase();
     listenRoomByIdConverter = ListenRoomByIdConverter();
+    sendPhraseConverter = SendPhraseConverter();
+    mockSendPhraseUseCase = MockSendPhraseUseCase();
     roomsController = RoomsController(
       getPlayerRoomsUsecase: mockGetPlayerRoomsUsecase,
       getRoomsByPlayerIdConverter: GetRoomsByPlayerIdConverter(),
       listenRoomByIdUsecase: mockListenRoomByIdUsecase,
       listenRoomByIdConverter: listenRoomByIdConverter,
+      sendPhraseUseCase: mockSendPhraseUseCase,
+      sendPhraseConverter: sendPhraseConverter,
     );
   });
 
@@ -95,5 +103,37 @@ void main() {
       });
     });
 
+  });
+
+  group("send phrase", () {
+    test("should send phrase to the usecase sucessfully", () async {
+      when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Right(None()));
+      final roomId = "validId";
+      final userId = "validId";
+      final phrase = "Era uma vez";
+      await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
+      verify(mockSendPhraseUseCase(any)).called(1);
+      expect(roomsController.failure, equals(None()));
+    });
+
+    test("should set failure if call to converter is fail", () async {
+      when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Right(None()));
+      final roomId = "validId";
+      final userId = "validId";
+      final phrase = "frase invalida";
+      await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
+      verifyNever(mockSendPhraseUseCase(any));
+      expect(roomsController.failure, isA<Some>());
+    });
+
+    test("should set failure if call to usecase is fail", () async {
+      when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Left(ServerFailure()));
+      final roomId = "validId";
+      final userId = "validId";
+      final phrase = "Era uma vez";
+      await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
+      verify(mockSendPhraseUseCase(any)).called(1);
+      expect(roomsController.failure, isA<Some>());
+    });
   });
 }

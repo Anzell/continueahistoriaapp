@@ -64,6 +64,15 @@ mixin _$RoomsController on _RoomsControllerBase, Store {
         .run(() => super.getRoomsByPlayerId(userId: userId));
   }
 
+  final _$sendPhraseAsyncAction =
+      AsyncAction('_RoomsControllerBase.sendPhrase');
+
+  @override
+  Future<void> sendPhrase({String? roomId, String? userId, String? phrase}) {
+    return _$sendPhraseAsyncAction.run(
+        () => super.sendPhrase(roomId: roomId, userId: userId, phrase: phrase));
+  }
+
   final _$_RoomsControllerBaseActionController =
       ActionController(name: '_RoomsControllerBase');
 

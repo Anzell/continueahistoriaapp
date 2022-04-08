@@ -14,6 +14,8 @@ import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart'
     as _i4;
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart'
     as _i8;
+import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart'
+    as _i10;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -74,4 +76,25 @@ class MockListenRoomByIdUsecase extends _i1.Mock
               returnValue:
                   Stream<_i3.Either<_i6.Failure, _i9.GameRoom>>.empty())
           as _i5.Stream<_i3.Either<_i6.Failure, _i9.GameRoom>>);
+}
+
+/// A class which mocks [SendPhraseUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSendPhraseUseCase extends _i1.Mock implements _i10.SendPhraseUseCase {
+  MockSendPhraseUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.RoomRepository get repository =>
+      (super.noSuchMethod(Invocation.getter(#repository),
+          returnValue: _FakeRoomRepository_0()) as _i2.RoomRepository);
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>> call(
+          _i10.SendPhraseUseCaseParams? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+          returnValue: Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>>.value(
+              _FakeEither_1<_i6.Failure, _i3.None<dynamic>>())) as _i5
+          .Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>>);
 }

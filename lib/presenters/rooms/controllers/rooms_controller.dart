@@ -80,4 +80,23 @@ abstract class _RoomsControllerBase with Store {
     });
   }
 
+  @action
+  Future<void> sendPhrase({String? roomId, String? userId, String? phrase}) async {
+    failure = None();
+    final completer = Completer();
+    Future(() {
+      final converterResult = sendPhraseConverter(SendPhraseConverterParams(userId: userId,phrase: phrase,roomId: roomId));
+      converterResult.fold((failure) {
+        _setFailure(failure);
+        completer.complete();
+      }, (convertedObject) async {
+        final usecaseResult = await sendPhraseUseCase(SendPhraseUseCaseParams(userId: convertedObject.userId, phrase: convertedObject.phrase, roomId: convertedObject.roomId));
+        usecaseResult.fold((failure) {
+          _setFailure(failure);
+          completer.complete();
+        }, (_) => completer.complete());
+      });
+    });
+    await completer.future;
+  }
 }
