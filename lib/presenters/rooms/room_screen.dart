@@ -1,8 +1,11 @@
+import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
 import 'package:continueahistoriaapp/presenters/widgets/input_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
+
+import '../../di/injector.dart';
 
 class RoomScreen extends StatelessWidget {
   final RoomsController roomsController;
@@ -15,6 +18,7 @@ class RoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _initializeListener();
+    _reactionFailureSetup(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Sala"),
@@ -64,9 +68,7 @@ class RoomScreen extends StatelessWidget {
                 controller: _phraseController,
                 suffixIconButton: IconButton(
                   icon: Icon(Icons.send, color: Colors.black),
-                  onPressed: (){
-
-                  },
+                  onPressed: () async => _sendPhrase(),
                 ),
               ),
             ),
@@ -86,5 +88,27 @@ class RoomScreen extends StatelessWidget {
       );
     });
     roomsController.listenRoomById(roomId: roomId);
+  }
+
+  void _reactionFailureSetup(BuildContext context) {
+    reaction(
+      (_) => roomsController.failure,
+      (_) => roomsController.failure.map(
+        (message) => showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(message),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendPhrase() async {
+    final appController = getIt<AppController>();
+    await roomsController.sendPhrase(roomId: roomId, userId: appController.user!.id, phrase: _phraseController.text);
+    if(roomsController.failure.isNone()){
+      _phraseController.clear();
+    }
   }
 }

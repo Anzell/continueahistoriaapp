@@ -4,6 +4,7 @@ class ServerConstants{
   static const loginPath = "/api/login/user";
   static const getUserByIdPath = "/api/user/";
   static const getRoomsOfPlayer = "/api/rooms/";
+  static const createRoom = "/api/createRoom";
 }
 
 class ServerCodes {

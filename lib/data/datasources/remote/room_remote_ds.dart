@@ -18,6 +18,7 @@ abstract class RoomRemoteDs {
   Future<List<ResumedGameRoom>> getPlayerRooms({required String userId});
   Stream<GameRoom> listenRoomUpdate({required String roomId});
   Future<void> sendPhrase({required String roomId, required String userId, required String phrase});
+  Future<void> createRoom({required GameRoom roomData, required String userId});
 }
 
 class RoomRemoteDsImpl implements RoomRemoteDs {
@@ -87,6 +88,22 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
         }
       }
     );
+  }
+
+  @override
+  Future<void> createRoom({required GameRoom roomData, required String userId}) async {
+    const url = ServerConstants.url + ServerConstants.createRoom;
+    final roomUpdated = roomData.copyWith(playersIds: [userId]);
+    final result = await httpClient.post(Uri.parse(url), body: json.encode(GameRoomMapper.entityToModel(roomUpdated).toJson()), headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await _getAuthorizationToken()}",
+    });
+    if (json.decode(result.body)["code"] == ServerCodes.validationError) {
+      throw ServerValidationException(message: json.decode(result.body)["message"]);
+    }
+    if (json.decode(result.body)["code"] != ServerCodes.success) {
+      throw ServerException();
+    }
   }
 
 }
