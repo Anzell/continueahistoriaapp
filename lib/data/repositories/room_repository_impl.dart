@@ -1,3 +1,4 @@
+import 'package:continueahistoriaapp/core/failures/exceptions.dart';
 import 'package:continueahistoriaapp/data/datasources/remote/room_remote_ds.dart';
 import 'package:continueahistoriaapp/domain/entities/game_room.dart';
 import 'package:continueahistoriaapp/domain/repositories/room_repository.dart';
@@ -38,6 +39,18 @@ class RoomRepositoryImpl implements RoomRepository {
     try{
       await datasource.sendPhrase(roomId: roomId, userId: userId, phrase: phrase);
       return const Right(None());
+    }catch(e){
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, None>> createRoom({required GameRoom roomData, required String userId}) async {
+    try{
+      await datasource.createRoom(roomData: roomData, userId: userId);
+      return const Right(None());
+    }on ServerValidationException catch(e){
+      return Left(ValidationFailure(message: e.message));
     }catch(e){
       return Left(ServerFailure());
     }

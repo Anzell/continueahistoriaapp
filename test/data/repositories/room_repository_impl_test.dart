@@ -83,10 +83,33 @@ void main(){
       expect(result, equals(Right(None())));
     });
 
-    test("should return None if call to datasource is success", () async {
+    test("should return ServerFailure if call to datasource is fail", () async {
       when(mockRoomRemoteDs.sendPhrase(roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase"))).thenThrow(ServerException());
       final result = await roomRepositoryImpl.sendPhrase(roomId: "valid", userId: "valid", phrase: "era uma vez");
       expect(result, equals(Left(ServerFailure())));
+    });
+  });
+
+  group("create room", () {
+    final roomData = GameRoom(name: "Era uma vez");
+    final userId = "validId";
+
+    test("should return None if call to datasource is success", () async {
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenAnswer((_) async => Future.value(null));
+      final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
+      expect(result, equals(Right(None())));
+    });
+
+    test("should return None if call to datasource is fail", () async {
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenThrow(ServerException());
+      final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
+      expect(result, equals(Left(ServerFailure())));
+    });
+
+    test("should return ValidationFailure if call to datasource is fail", () async {
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenThrow(ServerValidationException(message: "erro"));
+      final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
+      expect(result, equals(Left(ValidationFailure(message: "erro"))));
     });
   });
 }
