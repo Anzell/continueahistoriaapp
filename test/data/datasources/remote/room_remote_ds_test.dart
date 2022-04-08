@@ -63,14 +63,13 @@ void main() {
       when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
       when(mockHiveBox.get(any)).thenReturn("validToken");
       final result = roomRemoteDsImpl.getPlayerRooms(userId: "validId");
-      ;
       expect(result, throwsA(isA<ServerException>()));
     });
   });
 
   group("room stream", () {
     test("should emit room updates", () {
-      final emit1 = {
+      final emit1 = json.encode({
         "id": "validId",
         "name": "era uma vez",
         "playersIds": ["player1"],
@@ -78,8 +77,8 @@ void main() {
         "history": [
           {"phrase": "era uma vez", "senderId": "validId", "sendAt": 1633834800000}
         ]
-      };
-      final emit2 = {
+      });
+      final emit2 = json.encode({
         "id": "validId",
         "name": "era uma vez",
         "playersIds": ["player1"],
@@ -87,7 +86,13 @@ void main() {
         "history": [
           {"phrase": "era uma vez", "senderId": "validId", "sendAt": 1633834800000}
         ]
-      };
+      });
+      final mockHiveBox = MockBox();
+      when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => null);
+      when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
+      when(mockHiveBox.get(any)).thenReturn({
+        "id": "validId"
+      });
       when(mockSocket.eventListener(event: anyNamed("event"))).thenAnswer((_) async* {
         yield emit1;
         yield emit2;

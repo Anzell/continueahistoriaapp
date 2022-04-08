@@ -362,6 +362,10 @@ class MockSocketService extends _i1.Mock implements _i12.SocketService {
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
   @override
+  void emitEvent({dynamic data}) =>
+      super.noSuchMethod(Invocation.method(#emitEvent, [], {#data: data}),
+          returnValueForMissingStub: null);
+  @override
   _i6.Stream<dynamic> eventListener({String? event}) => (super.noSuchMethod(
       Invocation.method(#eventListener, [], {#event: event}),
       returnValue: Stream<dynamic>.empty()) as _i6.Stream<dynamic>);

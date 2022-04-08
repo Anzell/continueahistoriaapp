@@ -2,6 +2,7 @@ import 'package:continueahistoriaapp/di/injector.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/room_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
@@ -50,8 +51,11 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: roomsController.listResumedRooms.length,
-                      itemBuilder: (context, index) => _CardResumedRoom(
-                        resumedGameRoom: roomsController.listResumedRooms[index],
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => _goToRoomScreen(roomId: roomsController.listResumedRooms[index].id),
+                        child: _CardResumedRoom(
+                          resumedGameRoom: roomsController.listResumedRooms[index],
+                        ),
                       ),
                     )
                   ],
@@ -80,6 +84,12 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
       _loading = value;
     });
   }
+
+  void _goToRoomScreen({required String roomId}) => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => RoomScreen(roomsController: roomsController, roomId: roomId),
+        ),
+      );
 }
 
 class _CardResumedRoom extends StatelessWidget {
@@ -97,7 +107,10 @@ class _CardResumedRoom extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(resumedGameRoom.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                Text(
+                  resumedGameRoom.title,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 10),
                 Text("${resumedGameRoom.playersNumber} Jogadores"),
                 Text("${resumedGameRoom.phrasesNumber} frases")

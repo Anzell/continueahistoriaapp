@@ -8,7 +8,6 @@ import 'package:continueahistoriaapp/data/models/game_room_model.dart';
 import 'package:continueahistoriaapp/data/models/resumed_game_room_model.dart';
 import 'package:continueahistoriaapp/domain/entities/game_room.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,7 +25,7 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   final SocketService socketService;
 
   RoomRemoteDsImpl({required this.httpClient, required this.hive, required this.socketService}){
-    socketService.initSocket();
+    socketService.initSocket().then((value) => null);
   }
 
   @override
@@ -56,10 +55,24 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   @override
   Stream<GameRoom> listenRoomUpdate({required String roomId}) async* {
     final controller = StreamController<GameRoom>();
-    socketService.eventListener(event: "updateRoom").listen((event) => controller.add(GameRoomMapper.modelToEntity(GameRoomModel.fromJson(event))));
+    socketService.eventListener(event: "updateRoom").listen((event) => controller.add(GameRoomMapper.modelToEntity(GameRoomModel.fromJson(json.decode(event)))));
+    socketService.emitEvent(data: {
+      "type": TypeSocketMessages.joinRoom,
+      "content": {
+        "room_id": roomId,
+        "user_id": await _getUserId()
+      }
+    });
     await for (final room in controller.stream) {
       yield room;
     }
+  }
+
+  Future<String> _getUserId() async {
+    final box = await hive.openBox(HiveStaticBoxes.loggedUser);
+    final user = await box.get(HiveStaticKeys.userModel);
+    await box.close();
+    return user["id"];
   }
 
 }
