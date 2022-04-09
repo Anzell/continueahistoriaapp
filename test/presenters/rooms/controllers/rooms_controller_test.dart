@@ -3,12 +3,15 @@ import 'package:continueahistoriaapp/core/failures/failures.dart';
 import 'package:continueahistoriaapp/domain/entities/game_room.dart';
 import 'package:continueahistoriaapp/domain/entities/phrase.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/create_room_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/room_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/send_phrase_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,7 +21,7 @@ import 'package:mockito/mockito.dart';
 
 import 'rooms_controller_test.mocks.dart';
 
-@GenerateMocks([GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase])
+@GenerateMocks([GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase, CreateRoomUsecase])
 void main() {
   late MockGetPlayerRoomsUsecase mockGetPlayerRoomsUsecase;
   late GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
@@ -27,6 +30,9 @@ void main() {
   late SendPhraseConverter sendPhraseConverter;
   late MockSendPhraseUseCase mockSendPhraseUseCase;
   late MockListenRoomByIdUsecase mockListenRoomByIdUsecase;
+  late MockCreateRoomUsecase mockCreateRoomUsecase;
+  late CreateRoomConverter createRoomConverter;
+  late RoomConverter roomConverter;
 
   setUp(() {
     mockGetPlayerRoomsUsecase = MockGetPlayerRoomsUsecase();
@@ -34,6 +40,9 @@ void main() {
     mockListenRoomByIdUsecase = MockListenRoomByIdUsecase();
     listenRoomByIdConverter = ListenRoomByIdConverter();
     sendPhraseConverter = SendPhraseConverter();
+    createRoomConverter = CreateRoomConverter();
+    roomConverter = RoomConverter();
+    mockCreateRoomUsecase = MockCreateRoomUsecase();
     mockSendPhraseUseCase = MockSendPhraseUseCase();
     roomsController = RoomsController(
       getPlayerRoomsUsecase: mockGetPlayerRoomsUsecase,
@@ -42,6 +51,9 @@ void main() {
       listenRoomByIdConverter: listenRoomByIdConverter,
       sendPhraseUseCase: mockSendPhraseUseCase,
       sendPhraseConverter: sendPhraseConverter,
+      createRoomConverter: createRoomConverter,
+      roomConverter: roomConverter,
+      createRoomUsecase: mockCreateRoomUsecase,
     );
   });
 
@@ -71,7 +83,7 @@ void main() {
 
   group("listen room by id", () {
     test("should emit a valid Room when call to usecase and converter are valid", () {
-      final emit1 =  GameRoom(
+      final emit1 = GameRoom(
           id: "validId",
           name: "era uma vez",
           playersIds: ["player1"],
@@ -102,7 +114,6 @@ void main() {
         expect(roomsController.failure, equals(ErrorMessages.serverFailure));
       });
     });
-
   });
 
   group("send phrase", () {

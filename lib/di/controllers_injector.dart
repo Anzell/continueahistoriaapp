@@ -16,12 +16,15 @@ class ControllersInjector {
     );
     getIt.registerLazySingleton<AppController>(() => AppController());
     getIt.registerFactory<RoomsController>(() => RoomsController(
-      getRoomsByPlayerIdConverter: getIt(),
-      getPlayerRoomsUsecase: getIt(),
-      listenRoomByIdUsecase: getIt(),
-      listenRoomByIdConverter: getIt(),
-      sendPhraseConverter: getIt(),
-      sendPhraseUseCase: getIt(),
-    ));
+          getRoomsByPlayerIdConverter: getIt(),
+          getPlayerRoomsUsecase: getIt(),
+          listenRoomByIdUsecase: getIt(),
+          listenRoomByIdConverter: getIt(),
+          sendPhraseConverter: getIt(),
+          sendPhraseUseCase: getIt(),
+          createRoomConverter: getIt(),
+          createRoomUsecase: getIt(),
+          roomConverter: getIt(),
+        ));
   }
 }

@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:continueahistoriaapp/core/helpers/failure_helper.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/create_room_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/room_converter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
@@ -25,6 +28,9 @@ abstract class _RoomsControllerBase with Store {
   final ListenRoomByIdConverter listenRoomByIdConverter;
   final SendPhraseConverter sendPhraseConverter;
   final SendPhraseUseCase sendPhraseUseCase;
+  final RoomConverter roomConverter;
+  final CreateRoomConverter createRoomConverter;
+  final CreateRoomUsecase createRoomUsecase;
 
   _RoomsControllerBase({
     required this.getPlayerRoomsUsecase,
@@ -33,7 +39,10 @@ abstract class _RoomsControllerBase with Store {
     required this.listenRoomByIdConverter,
     required this.sendPhraseConverter,
     required this.sendPhraseUseCase,
-});
+    required this.createRoomConverter,
+    required this.roomConverter,
+    required this.createRoomUsecase,
+  });
 
   @observable
   Option<String> failure = const None();
@@ -85,12 +94,14 @@ abstract class _RoomsControllerBase with Store {
     failure = None();
     final completer = Completer();
     Future(() {
-      final converterResult = sendPhraseConverter(SendPhraseConverterParams(userId: userId,phrase: phrase,roomId: roomId));
+      final converterResult =
+          sendPhraseConverter(SendPhraseConverterParams(userId: userId, phrase: phrase, roomId: roomId));
       converterResult.fold((failure) {
         _setFailure(failure);
         completer.complete();
       }, (convertedObject) async {
-        final usecaseResult = await sendPhraseUseCase(SendPhraseUseCaseParams(userId: convertedObject.userId, phrase: convertedObject.phrase, roomId: convertedObject.roomId));
+        final usecaseResult = await sendPhraseUseCase(SendPhraseUseCaseParams(
+            userId: convertedObject.userId, phrase: convertedObject.phrase, roomId: convertedObject.roomId));
         usecaseResult.fold((failure) {
           _setFailure(failure);
           completer.complete();
