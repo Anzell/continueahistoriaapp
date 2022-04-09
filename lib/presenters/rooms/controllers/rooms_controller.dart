@@ -91,7 +91,7 @@ abstract class _RoomsControllerBase with Store {
 
   @action
   Future<void> sendPhrase({String? roomId, String? userId, String? phrase}) async {
-    failure = None();
+    failure = const None();
     final completer = Completer();
     Future(() {
       final converterResult =
@@ -106,6 +106,39 @@ abstract class _RoomsControllerBase with Store {
           _setFailure(failure);
           completer.complete();
         }, (_) => completer.complete());
+      });
+    });
+    await completer.future;
+  }
+
+  @action
+  Future<void> createRoom({String? name, String? userId}) async {
+    failure = const None();
+    final completer = Completer();
+    Future(() {
+      final roomConverterResult = roomConverter(RoomConverterParams(name: name));
+      roomConverterResult.fold((failure) {
+        _setFailure(failure);
+        completer.complete();
+      }, (convertedRoomObject) {
+        final createRoomConverterResult = createRoomConverter(
+          CreateRoomConverterParams(userId: userId, roomData: convertedRoomObject.gameRoom),
+        );
+        createRoomConverterResult.fold((failure) {
+          _setFailure(failure);
+          completer.complete();
+        }, (convertedCreateRoomObject) async {
+          final usecaseResult = await createRoomUsecase(
+            CreateRoomUsecaseParams(
+              userId: convertedCreateRoomObject.userId,
+              roomData: convertedCreateRoomObject.roomData,
+            ),
+          );
+          usecaseResult.fold((failure) {
+            _setFailure(failure);
+            completer.complete();
+          }, (_) => completer.complete());
+        });
       });
     });
     await completer.future;

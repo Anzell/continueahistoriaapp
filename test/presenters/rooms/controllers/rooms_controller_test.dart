@@ -147,4 +147,27 @@ void main() {
       expect(roomsController.failure, isA<Some>());
     });
   });
+
+  group("create room", () {
+    test("should call all steps to create the room", () async {
+      when(mockCreateRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.createRoom(name: "Era uma vez", userId: "validId");
+      expect(roomsController.failure, equals(None()));
+      verify(mockCreateRoomUsecase(any)).called(1);
+    });
+
+    test("should set a failure if call to roomConverter is fail", () async {
+      when(mockCreateRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.createRoom(name: "", userId: "validId");
+      expect(roomsController.failure, isA<Some>());
+      verifyNever(mockCreateRoomUsecase(any));
+    });
+
+    test("should set a failure if call to createRoomConverter is fail", () async {
+      when(mockCreateRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.createRoom(name: "Era uma vez", userId: "");
+      expect(roomsController.failure, isA<Some>());
+      verifyNever(mockCreateRoomUsecase(any));
+    });
+  });
 }
