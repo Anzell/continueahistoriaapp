@@ -6,7 +6,6 @@ part 'phrase_model.g.dart';
 
 @JsonSerializable(anyMap: true, explicitToJson: true, includeIfNull: false)
 class PhraseModel extends Phrase {
-
   @override
   @JsonKey(toJson: DateHelper.dateTimeToMilisseconds, fromJson: DateHelper.milissecondsToDateTime)
   final DateTime? sendAt;
