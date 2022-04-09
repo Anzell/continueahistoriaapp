@@ -22,6 +22,18 @@ class RoomScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Sala"),
+        actions: [
+          PopupMenuButton(
+            child: Icon(Icons.more_vert),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                  child: GestureDetector(
+                onTap: () {},
+                child: Text("Configurações da Sala"),
+              ))
+            ],
+          )
+        ],
       ),
       body: Stack(
         children: [
