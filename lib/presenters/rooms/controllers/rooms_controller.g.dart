@@ -82,6 +82,15 @@ mixin _$RoomsController on _RoomsControllerBase, Store {
         .run(() => super.createRoom(name: name, userId: userId));
   }
 
+  final _$addPlayerInRoomAsyncAction =
+      AsyncAction('_RoomsControllerBase.addPlayerInRoom');
+
+  @override
+  Future<void> addPlayerInRoom({String? username, String? roomId}) {
+    return _$addPlayerInRoomAsyncAction
+        .run(() => super.addPlayerInRoom(username: username, roomId: roomId));
+  }
+
   final _$_RoomsControllerBaseActionController =
       ActionController(name: '_RoomsControllerBase');
 

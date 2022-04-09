@@ -3,11 +3,13 @@ import 'package:continueahistoriaapp/core/failures/failures.dart';
 import 'package:continueahistoriaapp/domain/entities/game_room.dart';
 import 'package:continueahistoriaapp/domain/entities/phrase.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/add_player_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/create_room_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
@@ -21,7 +23,8 @@ import 'package:mockito/mockito.dart';
 
 import 'rooms_controller_test.mocks.dart';
 
-@GenerateMocks([GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase, CreateRoomUsecase])
+@GenerateMocks(
+    [GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase, CreateRoomUsecase, AddPlayerInRoomUsecase])
 void main() {
   late MockGetPlayerRoomsUsecase mockGetPlayerRoomsUsecase;
   late GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
@@ -33,6 +36,8 @@ void main() {
   late MockCreateRoomUsecase mockCreateRoomUsecase;
   late CreateRoomConverter createRoomConverter;
   late RoomConverter roomConverter;
+  late MockAddPlayerInRoomUsecase mockAddPlayerInRoomUsecase;
+  late AddPlayerConverter addPlayerConverter;
 
   setUp(() {
     mockGetPlayerRoomsUsecase = MockGetPlayerRoomsUsecase();
@@ -44,6 +49,8 @@ void main() {
     roomConverter = RoomConverter();
     mockCreateRoomUsecase = MockCreateRoomUsecase();
     mockSendPhraseUseCase = MockSendPhraseUseCase();
+    addPlayerConverter = AddPlayerConverter();
+    mockAddPlayerInRoomUsecase = MockAddPlayerInRoomUsecase();
     roomsController = RoomsController(
       getPlayerRoomsUsecase: mockGetPlayerRoomsUsecase,
       getRoomsByPlayerIdConverter: GetRoomsByPlayerIdConverter(),
@@ -54,6 +61,8 @@ void main() {
       createRoomConverter: createRoomConverter,
       roomConverter: roomConverter,
       createRoomUsecase: mockCreateRoomUsecase,
+      addPlayerConverter: addPlayerConverter,
+      addPlayerInRoomUsecase: mockAddPlayerInRoomUsecase,
     );
   });
 
@@ -166,6 +175,28 @@ void main() {
     test("should set a failure if call to createRoomConverter is fail", () async {
       when(mockCreateRoomUsecase(any)).thenAnswer((_) async => Right(None()));
       await roomsController.createRoom(name: "Era uma vez", userId: "");
+      expect(roomsController.failure, isA<Some>());
+      verifyNever(mockCreateRoomUsecase(any));
+    });
+  });
+
+  group("add player", () {
+    test("should call usecase to add player sucessfull", () async {
+      when(mockAddPlayerInRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.addPlayerInRoom(username: "anzell", roomId: "validId");
+      expect(roomsController.failure, equals(None()));
+    });
+
+    test("should set a failure if call to addPlayerConverter is fail", () async {
+      when(mockAddPlayerInRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.addPlayerInRoom();
+      expect(roomsController.failure, isA<Some>());
+      verifyNever(mockCreateRoomUsecase(any));
+    });
+
+    test("should set a failure if call to addPlayerUsecase is fail", () async {
+      when(mockAddPlayerInRoomUsecase(any)).thenAnswer((_) async => Left(ServerFailure()));
+      await roomsController.addPlayerInRoom(username: "anzell", roomId: "validId");
       expect(roomsController.failure, isA<Some>());
       verifyNever(mockCreateRoomUsecase(any));
     });

@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:continueahistoriaapp/core/helpers/failure_helper.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
+import 'package:continueahistoriaapp/presenters/rooms/converters/add_player_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/create_room_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/get_rooms_by_player_id_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/listen_room_by_id_converter.dart';
@@ -31,6 +33,8 @@ abstract class _RoomsControllerBase with Store {
   final RoomConverter roomConverter;
   final CreateRoomConverter createRoomConverter;
   final CreateRoomUsecase createRoomUsecase;
+  final AddPlayerConverter addPlayerConverter;
+  final AddPlayerInRoomUsecase addPlayerInRoomUsecase;
 
   _RoomsControllerBase({
     required this.getPlayerRoomsUsecase,
@@ -42,6 +46,8 @@ abstract class _RoomsControllerBase with Store {
     required this.createRoomConverter,
     required this.roomConverter,
     required this.createRoomUsecase,
+    required this.addPlayerConverter,
+    required this.addPlayerInRoomUsecase,
   });
 
   @observable
@@ -139,6 +145,27 @@ abstract class _RoomsControllerBase with Store {
             completer.complete();
           }, (_) => completer.complete());
         });
+      });
+    });
+    await completer.future;
+  }
+
+  @action
+  Future<void> addPlayerInRoom({String? username, String? roomId}) async {
+    failure = None();
+    final completer = Completer();
+    Future(() {
+      final converterResult = addPlayerConverter(AddPlayerConverterParams(roomId: roomId, username: username));
+      converterResult.fold((failure) {
+        _setFailure(failure);
+        completer.complete();
+      }, (convertedObject) async {
+        final usecaseResult = await addPlayerInRoomUsecase(
+            AddPlayerInRoomUsecaseParams(roomId: convertedObject.roomId, username: convertedObject.username));
+        usecaseResult.fold((failure) {
+          _setFailure(failure);
+          completer.complete();
+        }, (_) => completer.complete());
       });
     });
     await completer.future;

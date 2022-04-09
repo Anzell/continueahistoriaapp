@@ -10,6 +10,8 @@ import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart'
     as _i7;
 import 'package:continueahistoriaapp/domain/repositories/room_repository.dart'
     as _i2;
+import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart'
+    as _i12;
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart'
     as _i11;
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart'
@@ -116,6 +118,28 @@ class MockCreateRoomUsecase extends _i1.Mock implements _i11.CreateRoomUsecase {
   @override
   _i5.Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>> call(
           _i11.CreateRoomUsecaseParams? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+          returnValue: Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>>.value(
+              _FakeEither_1<_i6.Failure, _i3.None<dynamic>>())) as _i5
+          .Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>>);
+}
+
+/// A class which mocks [AddPlayerInRoomUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAddPlayerInRoomUsecase extends _i1.Mock
+    implements _i12.AddPlayerInRoomUsecase {
+  MockAddPlayerInRoomUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.RoomRepository get repository =>
+      (super.noSuchMethod(Invocation.getter(#repository),
+          returnValue: _FakeRoomRepository_0()) as _i2.RoomRepository);
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>> call(
+          _i12.AddPlayerInRoomUsecaseParams? params) =>
       (super.noSuchMethod(Invocation.method(#call, [params]),
           returnValue: Future<_i3.Either<_i6.Failure, _i3.None<dynamic>>>.value(
               _FakeEither_1<_i6.Failure, _i3.None<dynamic>>())) as _i5

@@ -1,6 +1,7 @@
 import 'package:continueahistoriaapp/di/injector.dart';
 import 'package:continueahistoriaapp/domain/usecases/auth/auto_login.dart';
 import 'package:continueahistoriaapp/domain/usecases/auth/sign_in.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
@@ -17,5 +18,6 @@ class UsecasesInjector {
     getIt.registerFactory<ListenRoomByIdUsecase>(() => ListenRoomByIdUsecase(repository: getIt()));
     getIt.registerFactory<SendPhraseUseCase>(() => SendPhraseUseCase(repository: getIt()));
     getIt.registerFactory<CreateRoomUsecase>(() => CreateRoomUsecase(repository: getIt()));
+    getIt.registerFactory<AddPlayerInRoomUsecase>(() => AddPlayerInRoomUsecase(repository: getIt()));
   }
 }
