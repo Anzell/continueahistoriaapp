@@ -1,7 +1,9 @@
+import 'package:continueahistoriaapp/core/themes/app_colors.dart';
 import 'package:continueahistoriaapp/di/injector.dart';
 import 'package:continueahistoriaapp/domain/entities/resumed_game_room.dart';
 import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/new_room_form_screen.dart';
 import 'package:continueahistoriaapp/presenters/rooms/room_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -35,6 +37,19 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.orange,
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => NewRoomFormScreen(
+                onCreateRoom: _initControllers,
+              ),
+            ),
+          );
+        },
+      ),
       appBar: AppBar(
         centerTitle: false,
         title: Text("Olá ${appController.user!.username}"),

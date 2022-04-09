@@ -81,11 +81,14 @@ class RoomScreen extends StatelessWidget {
   void _initializeListener() {
     reaction((_) => roomsController.listeningRoom, (_) async {
       await Future.delayed(const Duration(milliseconds: 100));
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 500),
-      );
+      if (_scrollController.hasClients) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 500),
+        );
+      }
     });
     roomsController.listenRoomById(roomId: roomId);
   }
@@ -107,7 +110,7 @@ class RoomScreen extends StatelessWidget {
   Future<void> _sendPhrase() async {
     final appController = getIt<AppController>();
     await roomsController.sendPhrase(roomId: roomId, userId: appController.user!.id, phrase: _phraseController.text);
-    if(roomsController.failure.isNone()){
+    if (roomsController.failure.isNone()) {
       _phraseController.clear();
     }
   }

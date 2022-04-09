@@ -26,7 +26,7 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   final HiveInterface hive;
   final SocketService socketService;
 
-  RoomRemoteDsImpl({required this.httpClient, required this.hive, required this.socketService}){
+  RoomRemoteDsImpl({required this.httpClient, required this.hive, required this.socketService}) {
     socketService.initSocket().then((value) => null);
   }
 
@@ -57,13 +57,12 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   @override
   Stream<GameRoom> listenRoomUpdate({required String roomId}) async* {
     final controller = StreamController<GameRoom>();
-    socketService.eventListener(event: "updateRoom").listen((event) => controller.add(GameRoomMapper.modelToEntity(GameRoomModel.fromJson(json.decode(event)))));
+    socketService
+        .eventListener(event: "updateRoom")
+        .listen((event) => controller.add(GameRoomMapper.modelToEntity(GameRoomModel.fromJson(json.decode(event)))));
     socketService.emitEvent(data: {
       "type": TypeSocketMessages.joinRoom,
-      "content": {
-        "room_id": roomId,
-        "user_id": await _getUserId()
-      }
+      "content": {"room_id": roomId, "user_id": await _getUserId()}
     });
     await for (final room in controller.stream) {
       yield room;
@@ -80,21 +79,17 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   @override
   Future<void> sendPhrase({required String roomId, required String userId, required String phrase}) async {
     socketService.emitEvent(data: {
-        "type": TypeSocketMessages.sendPhraseToHistory,
-        "content":{
-          "phrase": phrase,
-          "roomId": roomId,
-          "userId": userId
-        }
-      }
-    );
+      "type": TypeSocketMessages.sendPhraseToHistory,
+      "content": {"phrase": phrase, "roomId": roomId, "userId": userId}
+    });
   }
 
   @override
   Future<void> createRoom({required GameRoom roomData, required String userId}) async {
     const url = ServerConstants.url + ServerConstants.createRoom;
-    final roomUpdated = roomData.copyWith(playersIds: [userId]);
-    final result = await httpClient.post(Uri.parse(url), body: json.encode(GameRoomMapper.entityToModel(roomUpdated).toJson()), headers: {
+    final roomUpdated = roomData.copyWith(adminsIds: [userId]);
+    final result = await httpClient
+        .post(Uri.parse(url), body: json.encode(GameRoomMapper.entityToModel(roomUpdated).toJson()), headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer ${await _getAuthorizationToken()}",
     });
@@ -105,5 +100,4 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
       throw ServerException();
     }
   }
-
 }
