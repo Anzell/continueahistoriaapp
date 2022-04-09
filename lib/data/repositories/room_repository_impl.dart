@@ -17,41 +17,52 @@ class RoomRepositoryImpl implements RoomRepository {
     try {
       final response = await datasource.getPlayerRooms(userId: userId);
       return Right(response);
-    }catch (e){
+    } catch (e) {
       return Left(ServerFailure());
     }
   }
 
   @override
   Stream<Either<Failure, GameRoom>> listenRoom({required String roomId}) async* {
-    try{
+    try {
       final stream = datasource.listenRoomUpdate(roomId: roomId);
-      await for (final room in stream){
+      await for (final room in stream) {
         yield Right(room);
       }
-    }catch(e){
+    } catch (e) {
       yield Left(ServerFailure());
     }
   }
 
   @override
-  Future<Either<Failure, None>> sendPhrase({required String roomId, required String userId, required String phrase}) async {
-    try{
+  Future<Either<Failure, None>> sendPhrase(
+      {required String roomId, required String userId, required String phrase}) async {
+    try {
       await datasource.sendPhrase(roomId: roomId, userId: userId, phrase: phrase);
       return const Right(None());
-    }catch(e){
+    } catch (e) {
       return Left(ServerFailure());
     }
   }
 
   @override
   Future<Either<Failure, None>> createRoom({required GameRoom roomData, required String userId}) async {
-    try{
+    try {
       await datasource.createRoom(roomData: roomData, userId: userId);
       return const Right(None());
-    }on ServerValidationException catch(e){
+    } on ServerValidationException catch (e) {
       return Left(ValidationFailure(message: e.message));
-    }catch(e){
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, None>> addPlayerInRoom({required String roomId, required String userId}) async {
+    try {
+      await datasource.addPlayerInRoom(roomId: roomId, userId: userId);
+      return const Right(None());
+    } catch (e) {
       return Left(ServerFailure());
     }
   }

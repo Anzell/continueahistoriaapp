@@ -90,9 +90,7 @@ void main() {
       final mockHiveBox = MockBox();
       when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => null);
       when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
-      when(mockHiveBox.get(any)).thenReturn({
-        "id": "validId"
-      });
+      when(mockHiveBox.get(any)).thenReturn({"id": "validId"});
       when(mockSocket.eventListener(event: anyNamed("event"))).thenAnswer((_) async* {
         yield emit1;
         yield emit2;
@@ -115,7 +113,7 @@ void main() {
           ]));
     });
   });
-  
+
   group("send phrase", () {
     test("should call socketService and emit data", () async {
       when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => Future.value(null));
@@ -126,18 +124,15 @@ void main() {
 
   group("create room", () {
     test("should register a new room", () async {
-      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
-        "codeStatus": 200,
-        "message": "sucesso na operação",
-        "code": ServerCodes.success,
-        "result": {}
-      }), 200));
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async =>
+          http.Response(
+              json.encode(
+                  {"codeStatus": 200, "message": "sucesso na operação", "code": ServerCodes.success, "result": {}}),
+              200));
       final mockHiveBox = MockBox();
       when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
       when(mockHiveBox.get(any)).thenReturn("validToken");
-      const roomData = GameRoom(
-        name: "Era uma vez"
-      );
+      const roomData = GameRoom(name: "Era uma vez");
       const userId = "validId";
       await roomRemoteDsImpl.createRoom(roomData: roomData, userId: userId);
       verify(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).called(1);
@@ -145,18 +140,15 @@ void main() {
 
     test("should throw ValidationException if call to api is fail", () async {
       final messageExpected = "erro";
-      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
-        "codeStatus": 400,
-        "message": messageExpected,
-        "code": ServerCodes.validationError,
-        "result": {}
-      }), 400));
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async =>
+          http.Response(
+              json.encode(
+                  {"codeStatus": 400, "message": messageExpected, "code": ServerCodes.validationError, "result": {}}),
+              400));
       final mockHiveBox = MockBox();
       when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
       when(mockHiveBox.get(any)).thenReturn("validToken");
-      const roomData = GameRoom(
-          name: "Era uma vez"
-      );
+      const roomData = GameRoom(name: "Era uma vez");
       const userId = "validId";
       final result = roomRemoteDsImpl.createRoom(roomData: roomData, userId: userId);
       expect(result, throwsA(isA<ServerValidationException>()));
@@ -164,21 +156,26 @@ void main() {
 
     test("should throw ServerException if call to api is fail", () async {
       final messageExpected = "erro";
-      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async => http.Response(json.encode({
-        "codeStatus": 400,
-        "message": messageExpected,
-        "code": ServerCodes.serverFailure,
-        "result": {}
-      }), 400));
+      when(mockClient.post(any, body: anyNamed("body"), headers: anyNamed("headers"))).thenAnswer((_) async =>
+          http.Response(
+              json.encode(
+                  {"codeStatus": 400, "message": messageExpected, "code": ServerCodes.serverFailure, "result": {}}),
+              400));
       final mockHiveBox = MockBox();
       when(mockHiveInterface.openBox(any)).thenAnswer((_) async => mockHiveBox);
       when(mockHiveBox.get(any)).thenReturn("validToken");
-      const roomData = GameRoom(
-          name: "Era uma vez"
-      );
+      const roomData = GameRoom(name: "Era uma vez");
       const userId = "validId";
       final result = roomRemoteDsImpl.createRoom(roomData: roomData, userId: userId);
       expect(result, throwsA(isA<ServerException>()));
+    });
+  });
+
+  group("add player", () {
+    test("should call socketService and emit data", () async {
+      when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => Future.value(null));
+      await roomRemoteDsImpl.addPlayerInRoom(roomId: "validId", userId: "validId");
+      verify(mockSocket.emitEvent(data: anyNamed("data"))).called(1);
     });
   });
 }

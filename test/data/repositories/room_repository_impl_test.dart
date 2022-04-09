@@ -13,11 +13,11 @@ import 'package:mockito/mockito.dart';
 import 'room_repository_impl_test.mocks.dart';
 
 @GenerateMocks([RoomRemoteDs])
-void main(){
+void main() {
   late MockRoomRemoteDs mockRoomRemoteDs;
   late RoomRepositoryImpl roomRepositoryImpl;
 
-  setUp((){
+  setUp(() {
     mockRoomRemoteDs = MockRoomRemoteDs();
     roomRepositoryImpl = RoomRepositoryImpl(datasource: mockRoomRemoteDs);
   });
@@ -39,21 +39,23 @@ void main(){
       expect(result, equals(Left(ServerFailure())));
     });
   });
-  
+
   group("listen room", () {
     test("should emit valid game rooms if datasource listener is active", () {
-      final emit1 =  GameRoom(
+      final emit1 = GameRoom(
           id: "validId",
           name: "era uma vez",
           playersIds: ["player1"],
           adminsIds: ["admin1"],
           history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10))]);
-      final emit2 =  GameRoom(
-          id: "validId",
-          name: "era uma vez",
-          playersIds: ["player1"],
-          adminsIds: ["admin1"],
-          history: [Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10)), Phrase(phrase: "um cara que", senderId: "validId", sendAt: DateTime(2021,11,11))]);
+      final emit2 = GameRoom(id: "validId", name: "era uma vez", playersIds: [
+        "player1"
+      ], adminsIds: [
+        "admin1"
+      ], history: [
+        Phrase(phrase: "era uma vez", senderId: "validId", sendAt: DateTime(2021, 10, 10)),
+        Phrase(phrase: "um cara que", senderId: "validId", sendAt: DateTime(2021, 11, 11))
+      ]);
       when(mockRoomRemoteDs.listenRoomUpdate(roomId: anyNamed("roomId"))).thenAnswer((_) async* {
         yield emit1;
         yield emit2;
@@ -62,7 +64,7 @@ void main(){
     });
 
     test("should emit server failures if call to datasource throws error", () {
-      final emit1 =  GameRoom(
+      final emit1 = GameRoom(
           id: "validId",
           name: "era uma vez",
           playersIds: ["player1"],
@@ -72,19 +74,24 @@ void main(){
         yield emit1;
         throw ServerException();
       });
-      expectLater(roomRepositoryImpl.listenRoom(roomId: "validId"), emitsInOrder([Right(emit1), Left(ServerFailure())]));
+      expectLater(
+          roomRepositoryImpl.listenRoom(roomId: "validId"), emitsInOrder([Right(emit1), Left(ServerFailure())]));
     });
   });
 
   group("send phrase", () {
     test("should return None if call to datasource is success", () async {
-      when(mockRoomRemoteDs.sendPhrase(roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase"))).thenAnswer((_) async => Future.value(null));
+      when(mockRoomRemoteDs.sendPhrase(
+              roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase")))
+          .thenAnswer((_) async => Future.value(null));
       final result = await roomRepositoryImpl.sendPhrase(roomId: "valid", userId: "valid", phrase: "era uma vez");
       expect(result, equals(Right(None())));
     });
 
     test("should return ServerFailure if call to datasource is fail", () async {
-      when(mockRoomRemoteDs.sendPhrase(roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase"))).thenThrow(ServerException());
+      when(mockRoomRemoteDs.sendPhrase(
+              roomId: anyNamed("roomId"), userId: anyNamed("userId"), phrase: anyNamed("phrase")))
+          .thenThrow(ServerException());
       final result = await roomRepositoryImpl.sendPhrase(roomId: "valid", userId: "valid", phrase: "era uma vez");
       expect(result, equals(Left(ServerFailure())));
     });
@@ -95,21 +102,40 @@ void main(){
     final userId = "validId";
 
     test("should return None if call to datasource is success", () async {
-      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenAnswer((_) async => Future.value(null));
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId")))
+          .thenAnswer((_) async => Future.value(null));
       final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
       expect(result, equals(Right(None())));
     });
 
     test("should return None if call to datasource is fail", () async {
-      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenThrow(ServerException());
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId")))
+          .thenThrow(ServerException());
       final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
       expect(result, equals(Left(ServerFailure())));
     });
 
     test("should return ValidationFailure if call to datasource is fail", () async {
-      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId"))).thenThrow(ServerValidationException(message: "erro"));
+      when(mockRoomRemoteDs.createRoom(roomData: anyNamed("roomData"), userId: anyNamed("userId")))
+          .thenThrow(ServerValidationException(message: "erro"));
       final result = await roomRepositoryImpl.createRoom(roomData: roomData, userId: userId);
       expect(result, equals(Left(ValidationFailure(message: "erro"))));
+    });
+  });
+
+  group("add player in room", () {
+    test("should return None if call to datasource is success", () async {
+      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+          .thenAnswer((_) async => Future.value(null));
+      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", userId: "valid");
+      expect(result, equals(Right(None())));
+    });
+
+    test("should return ServerFailure if call to datasource is fail", () async {
+      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+          .thenThrow(ServerException());
+      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", userId: "valid");
+      expect(result, equals(Left(ServerFailure())));
     });
   });
 }

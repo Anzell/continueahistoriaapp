@@ -8,4 +8,5 @@ abstract class RoomRepository {
   Stream<Either<Failure, GameRoom>> listenRoom({required String roomId});
   Future<Either<Failure, None>> sendPhrase({required String roomId, required String userId, required String phrase});
   Future<Either<Failure, None>> createRoom({required GameRoom roomData, required String userId});
+  Future<Either<Failure, None>> addPlayerInRoom({required String roomId, required String userId});
 }
