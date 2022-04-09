@@ -19,20 +19,20 @@ void main() {
   });
 
   test("should return Right None if call to repository is success", () async {
-    when(mockRoomRepository.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+    when(mockRoomRepository.addPlayerInRoom(roomId: anyNamed("roomId"), username: anyNamed("username")))
         .thenAnswer((_) async => Right(None()));
     final result = await addPlayerInRoomUsecase(AddPlayerInRoomUsecaseParams(
-      userId: "valid",
+      username: "anzell",
       roomId: "valid",
     ));
     expect(result, equals(Right(None())));
   });
 
   test("should return Left if call to repository is fail", () async {
-    when(mockRoomRepository.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+    when(mockRoomRepository.addPlayerInRoom(roomId: anyNamed("roomId"), username: anyNamed("username")))
         .thenAnswer((_) async => Left(ServerFailure()));
     final result = await addPlayerInRoomUsecase(AddPlayerInRoomUsecaseParams(
-      userId: "valid",
+      username: "anzell",
       roomId: "valid",
     ));
     expect(result, equals(Left(ServerFailure())));

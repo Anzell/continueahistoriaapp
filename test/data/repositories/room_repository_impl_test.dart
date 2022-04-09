@@ -125,16 +125,16 @@ void main() {
 
   group("add player in room", () {
     test("should return None if call to datasource is success", () async {
-      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), username: anyNamed("username")))
           .thenAnswer((_) async => Future.value(null));
-      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", userId: "valid");
+      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", username: "username");
       expect(result, equals(Right(None())));
     });
 
     test("should return ServerFailure if call to datasource is fail", () async {
-      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+      when(mockRoomRemoteDs.addPlayerInRoom(roomId: anyNamed("roomId"), username: anyNamed("username")))
           .thenThrow(ServerException());
-      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", userId: "valid");
+      final result = await roomRepositoryImpl.addPlayerInRoom(roomId: "valid", username: "anzell");
       expect(result, equals(Left(ServerFailure())));
     });
   });

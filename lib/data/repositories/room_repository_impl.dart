@@ -58,9 +58,9 @@ class RoomRepositoryImpl implements RoomRepository {
   }
 
   @override
-  Future<Either<Failure, None>> addPlayerInRoom({required String roomId, required String userId}) async {
+  Future<Either<Failure, None>> addPlayerInRoom({required String roomId, required String username}) async {
     try {
-      await datasource.addPlayerInRoom(roomId: roomId, userId: userId);
+      await datasource.addPlayerInRoom(roomId: roomId, username: username);
       return const Right(None());
     } catch (e) {
       return Left(ServerFailure());

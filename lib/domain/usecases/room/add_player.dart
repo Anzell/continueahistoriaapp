@@ -11,16 +11,16 @@ class AddPlayerInRoomUsecase implements FutureUseCase<None, AddPlayerInRoomUseca
 
   @override
   Future<Either<Failure, None>> call(AddPlayerInRoomUsecaseParams params) async {
-    return await repository.addPlayerInRoom(roomId: params.roomId, userId: params.userId);
+    return await repository.addPlayerInRoom(roomId: params.roomId, username: params.username);
   }
 }
 
 class AddPlayerInRoomUsecaseParams extends Equatable {
-  final String userId;
+  final String username;
   final String roomId;
 
-  const AddPlayerInRoomUsecaseParams({required this.roomId, required this.userId});
+  const AddPlayerInRoomUsecaseParams({required this.roomId, required this.username});
 
   @override
-  List<Object> get props => [userId, roomId];
+  List<Object> get props => [username, roomId];
 }

@@ -58,10 +58,10 @@ class MockRoomRemoteDs extends _i1.Mock implements _i2.RoomRemoteDs {
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
   @override
-  _i3.Future<void> addPlayerInRoom({String? userId, String? roomId}) =>
+  _i3.Future<void> addPlayerInRoom({String? username, String? roomId}) =>
       (super.noSuchMethod(
           Invocation.method(
-              #addPlayerInRoom, [], {#userId: userId, #roomId: roomId}),
+              #addPlayerInRoom, [], {#username: username, #roomId: roomId}),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
 }

@@ -174,7 +174,7 @@ void main() {
   group("add player", () {
     test("should call socketService and emit data", () async {
       when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => Future.value(null));
-      await roomRemoteDsImpl.addPlayerInRoom(roomId: "validId", userId: "validId");
+      await roomRemoteDsImpl.addPlayerInRoom(roomId: "validId", username: "anzell");
       verify(mockSocket.emitEvent(data: anyNamed("data"))).called(1);
     });
   });

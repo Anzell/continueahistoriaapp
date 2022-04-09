@@ -69,10 +69,10 @@ class MockRoomRepository extends _i1.Mock implements _i3.RoomRepository {
           .Future<_i2.Either<_i5.Failure, _i2.None<dynamic>>>);
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i2.None<dynamic>>> addPlayerInRoom(
-          {String? roomId, String? userId}) =>
+          {String? roomId, String? username}) =>
       (super.noSuchMethod(
           Invocation.method(
-              #addPlayerInRoom, [], {#roomId: roomId, #userId: userId}),
+              #addPlayerInRoom, [], {#roomId: roomId, #username: username}),
           returnValue: Future<_i2.Either<_i5.Failure, _i2.None<dynamic>>>.value(
               _FakeEither_0<_i5.Failure, _i2.None<dynamic>>())) as _i4
           .Future<_i2.Either<_i5.Failure, _i2.None<dynamic>>>);
