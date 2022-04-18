@@ -35,8 +35,11 @@ class RoomRepositoryImpl implements RoomRepository {
   }
 
   @override
-  Future<Either<Failure, None>> sendPhrase(
-      {required String roomId, required String userId, required String phrase}) async {
+  Future<Either<Failure, None>> sendPhrase({
+    required String roomId,
+    required String userId,
+    required String phrase,
+  }) async {
     try {
       await datasource.sendPhrase(roomId: roomId, userId: userId, phrase: phrase);
       return const Right(None());

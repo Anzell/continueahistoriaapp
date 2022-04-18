@@ -26,7 +26,7 @@ void main() {
     mockClient = MockClient();
     mockSocket = MockSocketService();
     roomRemoteDsImpl = RoomRemoteDsImpl(httpClient: mockClient, hive: mockHiveInterface, socketService: mockSocket);
-    when(mockSocket.initSocket()).thenAnswer((_) async => Future.value());
+    when(mockSocket.init()).thenAnswer((_) async => Future.value());
   });
 
   group("get player rooms", () {

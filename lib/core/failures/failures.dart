@@ -6,6 +6,7 @@ abstract class Failure extends Equatable{
 
 }
 class ServerFailure extends Failure{}
+class UnknownServerFailure extends Failure{}
 class UsernameAlreadyRegisteredFailure extends Failure{}
 class EmailAlreadyRegisteredFailure extends Failure{}
 class InvalidCredentialsFailure extends Failure{}
@@ -14,4 +15,9 @@ class ValidationFailure extends Failure{
   final String message;
 
   ValidationFailure({required this.message});
+}
+class ReceivedServerFailure extends Failure {
+  final String message;
+
+  ReceivedServerFailure({required this.message});
 }

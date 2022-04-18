@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _loadingPage ? Center(child: CircularProgressIndicator()) : Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
+
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

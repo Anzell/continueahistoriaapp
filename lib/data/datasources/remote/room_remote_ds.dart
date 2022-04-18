@@ -28,7 +28,7 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
   final SocketService socketService;
 
   RoomRemoteDsImpl({required this.httpClient, required this.hive, required this.socketService}) {
-    socketService.initSocket().then((value) => null);
+    socketService.init().then((_) => null);
   }
 
   @override
@@ -112,4 +112,5 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
       }
     });
   }
+
 }

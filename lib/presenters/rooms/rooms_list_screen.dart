@@ -72,7 +72,8 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
                           resumedGameRoom: roomsController.listResumedRooms[index],
                         ),
                       ),
-                    )
+                    ),
+                    roomsController.listResumedRooms.isEmpty ? Text("Você ainda não participa de nenhuma sala") : SizedBox()
                   ],
                 ),
               ),

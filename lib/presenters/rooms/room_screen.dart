@@ -1,11 +1,16 @@
 import 'package:continueahistoriaapp/presenters/app/controllers/app_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
+import 'package:continueahistoriaapp/presenters/rooms/room_config_screen.dart';
 import 'package:continueahistoriaapp/presenters/widgets/input_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../di/injector.dart';
+
+enum _roomOptions  {
+  Configuration
+}
 
 class RoomScreen extends StatelessWidget {
   final RoomsController roomsController;
@@ -24,13 +29,18 @@ class RoomScreen extends StatelessWidget {
         title: const Text("Sala"),
         actions: [
           PopupMenuButton(
-            child: Icon(Icons.more_vert),
+            onSelected: (_roomOptions selected) {
+              switch(selected){
+                case _roomOptions.Configuration:
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RoomConfigScreen(room: roomsController.listeningRoom!)));
+                  break;
+              }
+            },
+            child: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
-              PopupMenuItem(
-                  child: GestureDetector(
-                onTap: () {},
-                child: Text("Configurações da Sala"),
-              ))
+              const PopupMenuItem(
+                  value: _roomOptions.Configuration,
+                  child: Text("Configurações da Sala"))
             ],
           )
         ],
@@ -73,13 +83,13 @@ class RoomScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               color: Colors.white,
               child: CustomInputForm(
                 placeholder: "continue a história",
                 controller: _phraseController,
                 suffixIconButton: IconButton(
-                  icon: Icon(Icons.send, color: Colors.black),
+                  icon: const Icon(Icons.send, color: Colors.black),
                   onPressed: () async => _sendPhrase(),
                 ),
               ),

@@ -22,5 +22,6 @@ class TypeSocketMessages {
   static const playerEnterInRoom = "player_enter_in_room";
   static const sendPhraseToHistory = "send_phrase_to_history";
   static const joinRoom = "player_join_room";
+  static const serverFailure = "server_failure";
   static const error = "error";
 }

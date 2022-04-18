@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:hive/hive.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
+import '../services/service.dart';
 import '../constants/hive_constants.dart';
 
-abstract class SocketService {
-  Future<void> initSocket();
+abstract class SocketService implements Service {
   void emitEvent({required dynamic data});
   Stream<dynamic> eventListener({required String event});
 }
@@ -28,7 +27,7 @@ class SocketServiceImpl implements SocketService {
   }
 
   @override
-  Future<void> initSocket() async {
+  Future<void> init() async {
     _socket = io("http://localhost:3000", OptionBuilder().setTransports(["websocket"]).setExtraHeaders({
       "Authorization": "Bearer ${await _getAuthorizationToken()}"
     }).build());
