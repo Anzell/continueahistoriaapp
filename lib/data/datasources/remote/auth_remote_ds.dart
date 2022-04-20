@@ -30,9 +30,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     }), headers: {
       "Content-Type": "application/json"
     });
+
     if (json.decode(responseLogin.body)["code"] == ServerCodes.success) {
-      final user = await _getUser(json.decode(responseLogin.body)["result"]["id"]);
       await _saveTokenInStorage(json.decode(responseLogin.body)["result"]["token"]);
+      final user = await _getUser(json.decode(responseLogin.body)["result"]["id"]);
       await _saveUserInStorage(user);
       return user;
     }

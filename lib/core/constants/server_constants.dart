@@ -1,5 +1,6 @@
 class ServerConstants{
-  static const url = "http://localhost:3000";
+  //static const url = "http://localhost:3000";
+  static const url = "https://serene-mesa-82236.herokuapp.com";
   static const signUpPath = "/api/register/user";
   static const loginPath = "/api/login/user";
   static const getUserByIdPath = "/api/user/";
