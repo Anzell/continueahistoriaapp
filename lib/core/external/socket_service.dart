@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:continueahistoriaapp/core/constants/server_constants.dart';
 import 'package:hive/hive.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../services/service.dart';
@@ -28,7 +29,7 @@ class SocketServiceImpl implements SocketService {
 
   @override
   Future<void> init() async {
-    _socket = io("http://localhost:3000", OptionBuilder().setTransports(["websocket"]).setExtraHeaders({
+    _socket = io(ServerConstants.url, OptionBuilder().setTransports(["websocket"]).setExtraHeaders({
       "Authorization": "Bearer ${await _getAuthorizationToken()}"
     }).build());
   }

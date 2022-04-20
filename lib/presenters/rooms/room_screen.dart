@@ -8,9 +8,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../di/injector.dart';
 
-enum _roomOptions  {
-  Configuration
-}
+enum _roomOptions { Configuration }
 
 class RoomScreen extends StatelessWidget {
   final RoomsController roomsController;
@@ -30,18 +28,16 @@ class RoomScreen extends StatelessWidget {
         actions: [
           PopupMenuButton(
             onSelected: (_roomOptions selected) {
-              switch(selected){
+              switch (selected) {
                 case _roomOptions.Configuration:
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RoomConfigScreen(room: roomsController.listeningRoom!)));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => RoomConfigScreen(room: roomsController.listeningRoom!)));
                   break;
               }
             },
             child: const Icon(Icons.more_vert),
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                  value: _roomOptions.Configuration,
-                  child: Text("Configurações da Sala"))
-            ],
+            itemBuilder: (context) =>
+                [const PopupMenuItem(value: _roomOptions.Configuration, child: Text("Configurações da Sala"))],
           )
         ],
       ),
@@ -119,10 +115,10 @@ class RoomScreen extends StatelessWidget {
     reaction(
       (_) => roomsController.failure,
       (_) => roomsController.failure.map(
-        (message) => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(message),
+            duration: const Duration(seconds: 1),
           ),
         ),
       ),

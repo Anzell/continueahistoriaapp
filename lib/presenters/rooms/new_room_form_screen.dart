@@ -66,10 +66,10 @@ class NewRoomFormScreen extends StatelessWidget {
     reaction(
       (_) => _roomController.failure,
       (_) => _roomController.failure.map(
-        (message) => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(message),
+            duration: const Duration(seconds: 1),
           ),
         ),
       ),

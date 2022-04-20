@@ -63,7 +63,8 @@ class SignInScreen extends StatelessWidget {
                                   if (result != null) {
                                     final appController = getIt.get<AppController>();
                                     appController.setUser(result);
-                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RoomsListScreen()), (route) => false);
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(builder: (context) => RoomsListScreen()), (route) => false);
                                   }
                                   setState(() => _loading = false);
                                 }),
@@ -83,10 +84,10 @@ class SignInScreen extends StatelessWidget {
     reaction(
       (_) => authController.failure,
       (_) => authController.failure.map(
-        (message) => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(message),
+            duration: const Duration(seconds: 1),
           ),
         ),
       ),

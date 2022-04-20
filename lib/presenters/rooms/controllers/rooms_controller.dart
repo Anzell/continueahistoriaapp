@@ -163,7 +163,6 @@ abstract class _RoomsControllerBase with Store {
         final usecaseResult = await addPlayerInRoomUsecase(
             AddPlayerInRoomUsecaseParams(roomId: convertedObject.roomId, username: convertedObject.username));
         usecaseResult.fold((failure) {
-          print("falhou");
           _setFailure(failure);
           completer.complete();
         }, (_) => completer.complete());

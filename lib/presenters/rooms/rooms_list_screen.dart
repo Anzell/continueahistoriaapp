@@ -75,7 +75,9 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
                         ),
                       ),
                     ),
-                    roomsController.listResumedRooms.isEmpty ? Text("Você ainda não participa de nenhuma sala") : SizedBox()
+                    roomsController.listResumedRooms.isEmpty
+                        ? Text("Você ainda não participa de nenhuma sala")
+                        : SizedBox()
                   ],
                 ),
               ),
@@ -87,10 +89,10 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
     reaction(
       (_) => roomsController.failure,
       (_) => roomsController.failure.map(
-        (message) => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(message),
+            duration: const Duration(seconds: 1),
           ),
         ),
       ),
@@ -99,16 +101,14 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
 
   void _reactionServerFailures() {
     reaction(
-          (_) => appController.failure,
-          (_) => appController.failure.map(
-              (message) {
-print("evento");
-            return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(message),
-              duration: const Duration(seconds: 1),
-
-            ));
-          }
+      (_) => appController.failure,
+      (_) => appController.failure.map(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 1),
+          ),
+        ),
       ),
     );
   }
