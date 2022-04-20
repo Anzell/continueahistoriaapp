@@ -31,6 +31,8 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
   Future<void> _initControllers() async {
     _setLoading(true);
     await roomsController.getRoomsByPlayerId(userId: appController.user!.id);
+    _reactionServerFailures();
+    appController.listenFailures();
     _setLoading(false);
   }
 
@@ -91,6 +93,22 @@ class _RoomsListScreenState extends State<RoomsListScreen> {
             content: Text(message),
           ),
         ),
+      ),
+    );
+  }
+
+  void _reactionServerFailures() {
+    reaction(
+          (_) => appController.failure,
+          (_) => appController.failure.map(
+              (message) {
+print("evento");
+            return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(message),
+              duration: const Duration(seconds: 1),
+
+            ));
+          }
       ),
     );
   }

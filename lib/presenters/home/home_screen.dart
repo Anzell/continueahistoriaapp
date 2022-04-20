@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _failureReactionSetup(context);
+    _failureReactionSetup();
     return Scaffold(
       body: _loadingPage ? Center(child: CircularProgressIndicator()) : Container(
         width: MediaQuery.of(context).size.width,
@@ -117,19 +117,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _failureReactionSetup(BuildContext context) {
+  _failureReactionSetup() {
     reaction(
-      (_) => authController.failure,
-      (_) => authController.failure.map(
-        (message) => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: Text(message),
+          (_) => authController.failure,
+          (_) =>
+          authController.failure.map(
+                (message) =>
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      AlertDialog(
+                        content: Text(message),
+                      ),
+                ),
           ),
-        ),
-      ),
     );
   }
+
 
   Future<void> _signUp() async {
     await authController.signUp(

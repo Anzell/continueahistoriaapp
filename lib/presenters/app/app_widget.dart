@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../../core/themes/app_colors.dart';
 
 class AppWidget extends StatelessWidget {
-  const AppWidget({Key? key}) : super(key: key);
+  AppWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -18,9 +19,10 @@ class AppWidget extends StatelessWidget {
           foregroundColor: Colors.black
         )
       ),
-      home: HomeScreen(
-
-      ),
+      home: HomeScreen(),
     );
   }
+
+
+
 }

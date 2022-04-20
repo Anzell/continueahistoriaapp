@@ -24,6 +24,21 @@ mixin _$AppController on _AppControllerBase, Store {
     });
   }
 
+  final _$failureAtom = Atom(name: '_AppControllerBase.failure');
+
+  @override
+  Option<String> get failure {
+    _$failureAtom.reportRead();
+    return super.failure;
+  }
+
+  @override
+  set failure(Option<String> value) {
+    _$failureAtom.reportWrite(value, super.failure, () {
+      super.failure = value;
+    });
+  }
+
   final _$_AppControllerBaseActionController =
       ActionController(name: '_AppControllerBase');
 
@@ -39,9 +54,21 @@ mixin _$AppController on _AppControllerBase, Store {
   }
 
   @override
+  void listenFailures() {
+    final _$actionInfo = _$_AppControllerBaseActionController.startAction(
+        name: '_AppControllerBase.listenFailures');
+    try {
+      return super.listenFailures();
+    } finally {
+      _$_AppControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-user: ${user}
+user: ${user},
+failure: ${failure}
     ''';
   }
 }

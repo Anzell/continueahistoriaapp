@@ -14,7 +14,7 @@ class ControllersInjector {
         autoLoginUsecase: getIt(),
       ),
     );
-    getIt.registerLazySingleton<AppController>(() => AppController());
+    getIt.registerLazySingleton<AppController>(() => AppController(listenServerFailuresUsecase: getIt()));
     getIt.registerFactory<RoomsController>(() => RoomsController(
           getRoomsByPlayerIdConverter: getIt(),
           getPlayerRoomsUsecase: getIt(),
