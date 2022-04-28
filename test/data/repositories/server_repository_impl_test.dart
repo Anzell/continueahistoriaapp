@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:continueahistoriaapp/core/external/socket_service.dart';
 import 'package:continueahistoriaapp/core/failures/failures.dart';
 import 'package:continueahistoriaapp/data/repositories/server_repository_impl.dart';
@@ -22,7 +24,7 @@ void main(){
     test("should emit valid Failures from server and return on Stream", () {
       final emit1 = ReceivedServerFailure(message: "erro");
       when(mockSocketService.eventListener(event: anyNamed("event"))).thenAnswer((_) async* {
-        yield {"codeStatus":400,"message":"erro","result":{},"code":"validation_error"};
+        yield json.encode({"codeStatus":400,"message":"erro","result":{},"code":"validation_error"});
       });
       expect(serverRepositoryImpl.listenServerFailures(), emitsInOrder([Right(emit1), emitsDone]));
     });
