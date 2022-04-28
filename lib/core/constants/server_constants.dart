@@ -25,4 +25,5 @@ class TypeSocketMessages {
   static const joinRoom = "player_join_room";
   static const serverFailure = "server_failure";
   static const error = "error";
+  static const lockRoom = "lock_room";
 }

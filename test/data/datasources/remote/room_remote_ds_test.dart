@@ -178,4 +178,12 @@ void main() {
       verify(mockSocket.emitEvent(data: anyNamed("data"))).called(1);
     });
   });
+
+  group("lock room", () {
+    test("should call socketService and emit data", () async {
+      when(mockSocket.emitEvent(data: anyNamed("data"))).thenAnswer((_) async => Future.value(null));
+      await roomRemoteDsImpl.lockRoom(roomId: "validId", userId: "anzell");
+      verify(mockSocket.emitEvent(data: anyNamed("data"))).called(1);
+    });
+  });
 }

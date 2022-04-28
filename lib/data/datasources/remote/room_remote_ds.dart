@@ -19,6 +19,7 @@ abstract class RoomRemoteDs {
   Stream<GameRoom> listenRoomUpdate({required String roomId});
   Future<void> sendPhrase({required String roomId, required String userId, required String phrase});
   Future<void> createRoom({required GameRoom roomData, required String userId});
+  Future<void> lockRoom({required String roomId, required String userId});
   Future<void> addPlayerInRoom({required String username, required String roomId});
 }
 
@@ -109,6 +110,17 @@ class RoomRemoteDsImpl implements RoomRemoteDs {
       "content": {
         "roomId": roomId,
         "username": username,
+      }
+    });
+  }
+
+  @override
+  Future<void> lockRoom({required String roomId, required String userId}) async {
+    socketService.emitEvent(data: {
+      "type": TypeSocketMessages.lockRoom,
+      "content": {
+        "roomId": roomId,
+        "userId": userId,
       }
     });
   }
