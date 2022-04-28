@@ -19,6 +19,8 @@ GameRoomModel _$GameRoomModelFromJson(Map json) => GameRoomModel(
       playersIds: (json['playersIds'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      someoneIsTapping: json['someoneIsTapping'] as bool?,
+      lastTappedId: json['lastTappedId'] as String?,
     );
 
 Map<String, dynamic> _$GameRoomModelToJson(GameRoomModel instance) {
@@ -33,6 +35,8 @@ Map<String, dynamic> _$GameRoomModelToJson(GameRoomModel instance) {
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
   writeNotNull('adminsIds', instance.adminsIds);
+  writeNotNull('someoneIsTapping', instance.someoneIsTapping);
+  writeNotNull('lastTappedId', instance.lastTappedId);
   writeNotNull('playersIds', instance.playersIds);
   writeNotNull('history', instance.history?.map((e) => e.toJson()).toList());
   return val;

@@ -9,6 +9,8 @@ class GameRoomMapper {
     adminsIds: model.adminsIds,
     playersIds: model.playersIds,
     name: model.name,
+    lastTappedId: model.lastTappedId,
+    someoneIsTapping: model.someoneIsTapping,
   );
 
   static GameRoomModel entityToModel(GameRoom entity) => GameRoomModel(
@@ -17,5 +19,7 @@ class GameRoomMapper {
     adminsIds: entity.adminsIds,
     playersIds: entity.playersIds,
     name: entity.name,
+    lastTappedId: entity.lastTappedId,
+    someoneIsTapping: entity.someoneIsTapping,
   );
 }

@@ -22,7 +22,7 @@ void main(){
     test("should emit valid Failures from server and return on Stream", () {
       final emit1 = ReceivedServerFailure(message: "erro");
       when(mockSocketService.eventListener(event: anyNamed("event"))).thenAnswer((_) async* {
-        yield {"codeStatus":400,"message":"erros","result":{},"code":"validation_error"};
+        yield {"codeStatus":400,"message":"erro","result":{},"code":"validation_error"};
       });
       expect(serverRepositoryImpl.listenServerFailures(), emitsInOrder([Right(emit1), emitsDone]));
     });

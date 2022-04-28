@@ -19,7 +19,9 @@ void main() {
       senderId: "validId",
       sendAt: DateTime(2021,10,10)
       )
-      ]
+      ],
+      someoneIsTapping: false,
+      lastTappedId: "admin1"
   );
 
   test("should be a Object of type Phrase", () {
@@ -45,7 +47,9 @@ void main() {
           "senderId": "validId",
           "sendAt": 1633834800000
         }
-      ]
+      ],
+      "someoneIsTapping": false,
+      "lastTappedId": "admin1"
     };
     expect(result, equals(expected));
   });

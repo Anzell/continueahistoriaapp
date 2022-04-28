@@ -16,12 +16,16 @@ class GameRoomModel extends GameRoom {
     String? name,
     List<String>? adminsIds,
     List<String>? playersIds,
+    bool? someoneIsTapping,
+    String? lastTappedId,
   }) : super(
           id: id,
           history: history,
           name: name,
           adminsIds: adminsIds,
           playersIds: playersIds,
+          someoneIsTapping: someoneIsTapping,
+          lastTappedId: lastTappedId,
         );
 
   factory GameRoomModel.fromJson(Map<String, dynamic> json) => _$GameRoomModelFromJson(json);

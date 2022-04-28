@@ -9,5 +9,7 @@
       "senderId": "validId",
       "sendAt": 1633834800000
     }
-  ]
+  ],
+  "someoneIsTapping": false,
+  "lastTappedId": "admin1"
 }

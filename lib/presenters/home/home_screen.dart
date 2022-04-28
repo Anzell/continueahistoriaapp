@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       setState(() => _registering = true);
                                       await _signUp();
                                       if (authController.failure.isNone()) {
-                                        _goToRoomsScreen();
+                                        _goToSignInScreen();
                                       }
                                       setState(() => _registering = false);
                                     },
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     reaction(
       (_) => authController.failure,
       (_) => authController.failure.map(
-        (message) => (message) => ScaffoldMessenger.of(context).showSnackBar(
+        (message) => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(message),
                 duration: const Duration(seconds: 1),
@@ -141,10 +141,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _goToRoomsScreen() async {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => RoomsListScreen()),
-      (route) => false,
+  void _goToSignInScreen() async {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => SignInScreen()),
     );
+  }
+
+  void _goToRoomsScreen() async {
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const RoomsListScreen()), (_) => false);
   }
 }
