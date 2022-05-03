@@ -6,6 +6,7 @@ import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/lock_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/add_player_converter.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/create_room_converter.dart';
@@ -35,6 +36,7 @@ abstract class _RoomsControllerBase with Store {
   final CreateRoomUsecase createRoomUsecase;
   final AddPlayerConverter addPlayerConverter;
   final AddPlayerInRoomUsecase addPlayerInRoomUsecase;
+  final LockRoomUsecase lockRoomUsecase;
 
   _RoomsControllerBase({
     required this.getPlayerRoomsUsecase,
@@ -48,6 +50,7 @@ abstract class _RoomsControllerBase with Store {
     required this.createRoomUsecase,
     required this.addPlayerConverter,
     required this.addPlayerInRoomUsecase,
+    required this.lockRoomUsecase,
   });
 
   @observable
@@ -170,4 +173,12 @@ abstract class _RoomsControllerBase with Store {
     });
     await completer.future;
   }
+
+  @action
+  Future<void> lockRoom({required String roomId, required String userId}) async {
+    failure = const None();
+    final result = await lockRoomUsecase(LockRoomUsecaseParams(userId: userId, roomId: roomId));
+    result.fold(_setFailure, (_) => _);
+  }
+
 }

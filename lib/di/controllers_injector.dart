@@ -27,6 +27,7 @@ class ControllersInjector {
           roomConverter: getIt(),
           addPlayerConverter: getIt(),
           addPlayerInRoomUsecase: getIt(),
+      lockRoomUsecase: getIt(),
         ));
   }
 }
