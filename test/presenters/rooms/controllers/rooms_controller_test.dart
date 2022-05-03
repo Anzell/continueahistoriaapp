@@ -7,6 +7,7 @@ import 'package:continueahistoriaapp/domain/usecases/room/add_player.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/create_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/get_player_rooms.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/listen_room_by_id.dart';
+import 'package:continueahistoriaapp/domain/usecases/room/lock_room.dart';
 import 'package:continueahistoriaapp/domain/usecases/room/send_phrase.dart';
 import 'package:continueahistoriaapp/presenters/rooms/controllers/rooms_controller.dart';
 import 'package:continueahistoriaapp/presenters/rooms/converters/add_player_converter.dart';
@@ -24,7 +25,7 @@ import 'package:mockito/mockito.dart';
 import 'rooms_controller_test.mocks.dart';
 
 @GenerateMocks(
-    [GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase, CreateRoomUsecase, AddPlayerInRoomUsecase])
+    [GetPlayerRoomsUsecase, ListenRoomByIdUsecase, SendPhraseUseCase, CreateRoomUsecase, AddPlayerInRoomUsecase, LockRoomUsecase])
 void main() {
   late MockGetPlayerRoomsUsecase mockGetPlayerRoomsUsecase;
   late GetRoomsByPlayerIdConverter getRoomsByPlayerIdConverter;
@@ -38,6 +39,7 @@ void main() {
   late RoomConverter roomConverter;
   late MockAddPlayerInRoomUsecase mockAddPlayerInRoomUsecase;
   late AddPlayerConverter addPlayerConverter;
+  late MockLockRoomUsecase mockLockRoomUsecase;
 
   setUp(() {
     mockGetPlayerRoomsUsecase = MockGetPlayerRoomsUsecase();
@@ -51,6 +53,7 @@ void main() {
     mockSendPhraseUseCase = MockSendPhraseUseCase();
     addPlayerConverter = AddPlayerConverter();
     mockAddPlayerInRoomUsecase = MockAddPlayerInRoomUsecase();
+    mockLockRoomUsecase = MockLockRoomUsecase();
     roomsController = RoomsController(
       getPlayerRoomsUsecase: mockGetPlayerRoomsUsecase,
       getRoomsByPlayerIdConverter: GetRoomsByPlayerIdConverter(),
@@ -63,6 +66,7 @@ void main() {
       createRoomUsecase: mockCreateRoomUsecase,
       addPlayerConverter: addPlayerConverter,
       addPlayerInRoomUsecase: mockAddPlayerInRoomUsecase,
+      lockRoomUsecase: mockLockRoomUsecase,
     );
   });
 
@@ -128,9 +132,9 @@ void main() {
   group("send phrase", () {
     test("should send phrase to the usecase sucessfully", () async {
       when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Right(None()));
-      final roomId = "validId";
-      final userId = "validId";
-      final phrase = "Era uma vez";
+      const roomId = "validId";
+      const userId = "validId";
+      const phrase = "Era uma vez";
       await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
       verify(mockSendPhraseUseCase(any)).called(1);
       expect(roomsController.failure, equals(None()));
@@ -138,9 +142,9 @@ void main() {
 
     test("should set failure if call to converter is fail", () async {
       when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Right(None()));
-      final roomId = "validId";
-      final userId = "validId";
-      final phrase = "frase invalida";
+      const roomId = "validId";
+      const userId = "validId";
+      const phrase = "frase invalida";
       await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
       verifyNever(mockSendPhraseUseCase(any));
       expect(roomsController.failure, isA<Some>());
@@ -148,9 +152,9 @@ void main() {
 
     test("should set failure if call to usecase is fail", () async {
       when(mockSendPhraseUseCase(any)).thenAnswer((_) async => Left(ServerFailure()));
-      final roomId = "validId";
-      final userId = "validId";
-      final phrase = "Era uma vez";
+      const roomId = "validId";
+      const userId = "validId";
+      const phrase = "Era uma vez";
       await roomsController.sendPhrase(phrase: phrase, userId: userId, roomId: roomId);
       verify(mockSendPhraseUseCase(any)).called(1);
       expect(roomsController.failure, isA<Some>());
@@ -184,7 +188,7 @@ void main() {
     test("should call usecase to add player sucessfull", () async {
       when(mockAddPlayerInRoomUsecase(any)).thenAnswer((_) async => Right(None()));
       await roomsController.addPlayerInRoom(username: "anzell", roomId: "validId");
-      expect(roomsController.failure, equals(None()));
+      expect(roomsController.failure, equals(const None()));
     });
 
     test("should set a failure if call to addPlayerConverter is fail", () async {
@@ -199,6 +203,22 @@ void main() {
       await roomsController.addPlayerInRoom(username: "anzell", roomId: "validId");
       expect(roomsController.failure, isA<Some>());
       verifyNever(mockCreateRoomUsecase(any));
+    });
+  });
+
+  group("lock room", () {
+    test("should send a event to lock the room", () async {
+      when(mockLockRoomUsecase(any)).thenAnswer((_) async => Right(None()));
+      await roomsController.lockRoom(roomId: "validId", userId: "validId");
+      expect(roomsController.failure, isA<None>());
+      verify(mockLockRoomUsecase(any));
+    });
+
+    test("should set a failure if call to usecase is fail", () async {
+      when(mockLockRoomUsecase(any)).thenAnswer((_) async => Left(ServerFailure()));
+      await roomsController.lockRoom(roomId: "validId", userId: "validId");
+      expect(roomsController.failure, isA<Some>());
+      verify(mockLockRoomUsecase(any));
     });
   });
 }

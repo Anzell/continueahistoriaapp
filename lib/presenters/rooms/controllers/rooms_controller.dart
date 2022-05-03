@@ -155,7 +155,7 @@ abstract class _RoomsControllerBase with Store {
 
   @action
   Future<void> addPlayerInRoom({String? username, String? roomId}) async {
-    failure = None();
+    failure = const None();
     final completer = Completer();
     Future(() {
       final converterResult = addPlayerConverter(AddPlayerConverterParams(roomId: roomId, username: username));
