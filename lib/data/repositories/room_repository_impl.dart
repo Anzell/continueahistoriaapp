@@ -69,4 +69,14 @@ class RoomRepositoryImpl implements RoomRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, None>> lockRoom({required String roomId, required String userId}) async {
+    try {
+      await datasource.lockRoom(roomId: roomId, userId: userId);
+      return const Right(None());
+    } catch(e) {
+      return Left(ServerFailure());
+    }
+  }
 }

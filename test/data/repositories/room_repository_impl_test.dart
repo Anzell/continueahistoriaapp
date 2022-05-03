@@ -138,4 +138,20 @@ void main() {
       expect(result, equals(Left(ServerFailure())));
     });
   });
+
+  group("lock room", () {
+    test("should return None if call to datasource is success", () async {
+      when(mockRoomRemoteDs.lockRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+          .thenAnswer((_) async => Future.value(null));
+      final result = await roomRepositoryImpl.lockRoom(roomId: "valid", userId: "userId");
+      expect(result, equals(const Right(None())));
+    });
+
+    test("should return ServerFailure if call to datasource is fail", () async {
+      when(mockRoomRemoteDs.lockRoom(roomId: anyNamed("roomId"), userId: anyNamed("userId")))
+          .thenThrow(ServerException());
+      final result = await roomRepositoryImpl.lockRoom(roomId: "valid", userId: "userId");
+      expect(result, equals(Left(ServerFailure())));
+    });
+  });
 }

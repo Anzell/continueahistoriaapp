@@ -9,4 +9,5 @@ abstract class RoomRepository {
   Future<Either<Failure, None>> sendPhrase({required String roomId, required String userId, required String phrase});
   Future<Either<Failure, None>> createRoom({required GameRoom roomData, required String userId});
   Future<Either<Failure, None>> addPlayerInRoom({required String roomId, required String username});
+  Future<Either<Failure, None>> lockRoom({required String roomId, required String userId});
 }
